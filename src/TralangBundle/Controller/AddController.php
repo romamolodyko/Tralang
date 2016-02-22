@@ -4,7 +4,7 @@
 
     use Symfony\Bundle\FrameworkBundle\Controller\Controller;
     use Symfony\Component\HttpFoundation\Request;
-    use TralangBundle\Entity\Users;
+    use TralangBundle\Entity\Binding;
     use Symfony\Component\HttpFoundation\Session\Session;
     use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
     use TralangBundle\Entity\Words;
@@ -14,10 +14,40 @@
         /**
          * @Route("/glossary", name = "glossary")
          */
-        public function getAllWordsAction(){
+        public function showWordsAction(){
+            return $this->render('TralangBundle:AddWords:add.html.twig');
+        }
+
+        /**
+         * @Route("/add", name = "add")
+         */
+        public function addWordAction(Request $request){
             $words = new Words();
+            $ruWord = $request->get("russiaWord");
+            $enWord = $request->get("englishWord");
+            $words->setEnWord($enWord);
+            $words->setRuWord($ruWord);
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($words);
+            $em->flush();
+            $id = $words->getId();
+            $b = $this->binding($id);
+            if($b){
+
+            }
+            return $this->render("TralangBundle:AddWords:list-words.html.twig", array("id" => $id));
+        }
+
+        public function binding($idWord){
             $session = new Session();
-            $id = $session->get('id');
-            return $this->render('TralangBundle:AddWords:list-words.htnl.twig');
+            $idUser = $session->get('id');
+            $binding = new Binding();
+            $binding->setIdUser($idUser);
+            $binding->setIdWords($idWord);
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($binding);
+            $em->flush();
+            $id = $binding->getId();
+            return $id;
         }
     }

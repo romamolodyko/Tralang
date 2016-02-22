@@ -3,7 +3,7 @@
 namespace TralangBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraint as Assert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -20,25 +20,54 @@ class Words
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
-    protected $ruWords;
+    protected $ru_words;
 
     /**
      * @ORM\Column(type="string", length=255)
-     */
-    protected $enWords;
-
-    /**
      * @Assert\NotBlank()
      */
-    public function setRuWords($ruWords){
-        $this->ruWords = $ruWords;
+    protected $en_words;
+
+    /**
+     * @Assert\NotBlank(message = "Word doesn't add")
+     */
+    public function setRuWord($ruWord){
+        $this->ru_words = $ruWord;
     }
 
     /**
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message = "Word doesn't add")
      */
-    public function setEnWords($enWords){
-        $this->ruWords = $enWords;
+    public function setEnWord($enWord){
+        $this->en_words = $enWord;
+    }
+
+    /**
+     * Get user id
+     *
+     * @return string
+     */
+    public function getId(){
+        return $this->id;
+    }
+
+    /**
+     * Get user enWord
+     * @Assert\NotBlank(message = "Word doesn't exist")
+     * @return string
+     */
+    public function getEnWord(){
+        return $this->en_words;
+    }
+
+    /**
+     * Get user id
+     * @Assert\NotBlank(message = "Word doesn't exist")
+     * @return string
+     */
+    public function getRuWord(){
+        return $this->ru_words;
     }
 }

@@ -7,6 +7,7 @@
             Welcome!
         {% endblock %}
     </title>
+    <link rel="stylesheet" href="">
     {% block stylesheets %}
         {% stylesheets '@TralangBundle/Resources/public/css/*' filter='cssrewrite' %}
         <link rel="stylesheet" href="{{ asset_url }}" />
@@ -20,7 +21,7 @@
     <a class="navbar-brand" href="{{ path('homepage') }}">Tralang</a>
     <ul class="nav navbar-nav">
         <li class="active">
-            <a href="{{ path('login') }}">Login</a>
+            {% block state %}<a href="{{ path('login') }}">Login</a>{% endblock %}
         </li>
     </ul>
     <span class="navbar-brand navbar-right" style="padding-right: 22px; padding-top: 14px;">

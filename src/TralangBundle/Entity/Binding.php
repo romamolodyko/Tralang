@@ -19,16 +19,26 @@ class Binding
 
     /**
      * @ORM\Column(type="integer", length=255)
+     * @Assets\NotBlank()
      */
     private $idUser;
 
     /**
      * @ORM\Column(type="integer", length=255)
+     * @Assets\NotBlank()
      */
     private $idWord;
 
-    /**
-     * @ORM\Column(type="integer", length=255)
-     */
-    private $state;
+    public function setId($id){
+        $this->id = $id;
+    }
+
+
+    public function setIdUser($idUser){
+        $this->idUser = $idUser;
+    }
+
+    public function setIdWords($idWords){
+        $this->idWord = $idWords;
+    }
 }

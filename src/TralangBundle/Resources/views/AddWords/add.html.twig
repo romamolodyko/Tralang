@@ -1,0 +1,28 @@
+{% extends "TralangBundle:MainView:home.html.twig" %}
+
+{% block state %}<a class="navbar-brand" href="#">Log Out</a>{% endblock %}
+
+{% block body %}
+<div class="addWords">
+<div class="addBlock">
+    <form>
+        <div class="col-lg">
+            <div class="input-group">
+                <input type="text" class="form-control word" type="text" id="query" maxlength="40">
+                      <span class="input-group-btn">
+                        <input type="button" value="Add" class="btn btn-default show_translate">
+                      </span>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="chooseTranslate">
+    <span class="input-group-addon send"></span>
+</div>
+<div class="state"></div>
+</div>
+<audio src='' class="speech"></audio>
+<div class="all_words">
+    {% block list %}{% endblock %}
+</div>
+{% endblock %}
