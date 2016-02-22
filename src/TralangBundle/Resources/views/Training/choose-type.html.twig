@@ -1,0 +1,12 @@
+{% extends "TralangBundle:MainView:home.html.twig" %}
+
+{% block body %}
+    <div>
+        <div class="col-md-6">
+            <button class="btn-danger first-mode">Training</button>
+        </div>
+        <div class="col-md-6">
+            <button class="btn-danger add-words"><a href="{{ path('glossary') }}">Add words</a></button>
+        </div>
+    </div>
+{% endblock %}

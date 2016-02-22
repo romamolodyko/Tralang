@@ -1,0 +1,7 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+tralang:
+    resource: "@TralangBundle/Controller"
+    type:     annotation

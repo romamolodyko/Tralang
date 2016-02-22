@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>
+        {% block title %}
+            Welcome!
+        {% endblock %}
+    </title>
+    {% block stylesheets %}
+        {% stylesheets '@TralangBundle/Resources/public/css/*' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+    {% endblock %}
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+</head>
+<body>
+<nav class="navbar navbar-default " role="navigation" style="width: 1000px; margin: auto;">
+    <a class="navbar-brand" href="{{ path('homepage') }}">Tralang</a>
+    <ul class="nav navbar-nav">
+        <li class="active">
+            <a href="{{ path('login') }}">Login</a>
+        </li>
+    </ul>
+    <span class="navbar-brand navbar-right" style="padding-right: 22px; padding-top: 14px;">
+        Hello {% block userName %}
+        {#{{ name|default('User')  }}!#}
+        {% endblock %}
+    </span>
+</nav>
+<div class="container">
+    {% block body %}
+
+    {% endblock %}
+</div>
+{% javascripts '@TralangBundle/Resources/public/js/*'%}
+<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+</body>
+</html>

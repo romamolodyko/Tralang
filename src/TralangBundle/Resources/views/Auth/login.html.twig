@@ -1,0 +1,33 @@
+{% extends "TralangBundle:MainView:home.html.twig" %}
+
+{% block body %}
+
+    <div class="panel panel-default" style="width: 300px;margin: auto;">
+          <div class="panel-heading">
+                <h3 class="panel-title">Sign in</h3>
+          </div>
+          <div class="panel-body">
+              <form action="" method="post" role="form">
+                  <div class="form-group">
+                      <label for="field-email">Email</label>
+                      <input type="text" class="form-control" name="email" id="field-email" placeholder="Your Email...">
+                  </div>
+                  <div class="form-group">
+                      <label for="field-password">Password</label>
+                      <input type="password" class="form-control" name="password" id="field-password" placeholder="Your password...">
+                  </div>
+                  <button type="submit" class="btn btn-primary pull-left">Login</button>
+
+                  <div>
+                      <p class="navbar-text pull-right" style="margin-top: 9px">
+                        <a href="{{ path('signUp') }}" class="navbar-link">Sign up</a>
+                      </p>
+                  </div>
+              </form>
+          </div>
+    </div>
+    <div class="alert alert-warning" style="width: 300px;margin: auto;">
+    	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    	<strong>{{ error }}</strong>
+    </div>
+{% endblock %}
