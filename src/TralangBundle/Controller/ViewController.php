@@ -14,7 +14,13 @@ class ViewController extends Controller
     public function indexAction(){
         $session = new Session();
         $session->clear();
-        return $this->render('TralangBundle:MainView:home.html.twig');
+        print_r($session->get("name"));
+        if($session->get("name") == ""){
+            return $this->forward("TralangBundle:Auth:auth");
+        }
+        else{
+            return $this->forward("TralangBundle:View:showMain");
+        }
     }
 
     /**
@@ -24,12 +30,5 @@ class ViewController extends Controller
         $session = new Session();
         $userName = $session->get('name');
         return $this->render('TralangBundle:MainView:home.html.twig');
-    }
-
-    /**
-     * @Route("/chooseTraining", name="chooseTraining")
-     */
-    public function chooseTrainingAction(){
-        return $this->render('TralangBundle:Training:choose-type.html.twig');
     }
 }

@@ -4,6 +4,7 @@ namespace TralangBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use TralangBundle\Entity\Users;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,35 +20,27 @@ class AuthController extends Controller
         $data = array();
         $data['error'] = array();
         $data['error'] = "";
-        if($_POST){
+        if($_GET){
             $email = $request->get('email');
             $password = $request->get('password');
-            if(isset($email) && isset($password)){
-                $em = $this->getDoctrine()->getEntityManager();
-                $repository = $em->getRepository('TralangBundle:Users');
-                $user = $repository->findOneBy(array('email' => $email, 'password' => $password));
+            $em = $this->getDoctrine()->getEntityManager();
+            $repository = $em->getRepository('TralangBundle:Users');
+            $user = $repository->findOneBy(array('email' => $email, 'password' => $password));
                 if($user){
                     $name = $user->getName();
                     $this->setSession($name, $user->getId());
                 }
                 else{
-                    $data['error'] = "Такой пользователь не найден";
-                }
+                    $data['error'] = "That user doesn't exist";
+                    }
+            if ($data['error'] == ""){
+                //return $this->redirectToRoute('homepage');
             }
             else{
-                $data['error'] = "Заполните все поля";
+                return new Response($data['error']);
             }
         }
-        else{
-            $data['error'] = "Введите свои даные";
-        }
-
-        if ($data['error'] == ""){
-            return $this->redirectToRoute('chooseTraining');
-        }
-        else{
-            return $this->render('TralangBundle:Auth:login.html.twig', array('error' => $data['error']));
-        }
+        return $this->render('TralangBundle:MainView:index.html.twig');
     }
 
 
@@ -78,7 +71,6 @@ class AuthController extends Controller
                                 $em->flush();
 
                                 $this->setSession($userName, $user->getId());
-                                return $this->render('TralangBundle:MainView:home.html.twig');
                             }
                             else{
                                 $data['error'] = "Пользователь с таким email уже существует";
@@ -108,13 +100,24 @@ class AuthController extends Controller
             return $this->render('TralangBundle:Training:choose-type.html.twig', array('name' => $userName));
         }
         else{
-            return $this->render('TralangBundle:Auth:signup.html.twig', array('error' => $data['error']));
+            return $this->render('TralangBundle:MainView:index.html.twig', array('error' => $data['error']));
         }
+
+    }
+
+    /**
+     * @Route("/logout", name = "logout")
+     */
+    public function logOutAction(){
+        $session = new Session();
+        $session->clear();
+        return $this->render("TralangBundle:MainView:index.html.twig");
 
     }
 
     public function setSession($name, $id){
         $session = new Session();
+        $session->start();
         $session->set('name', $name);
         $session->set('id', $id);
     }
