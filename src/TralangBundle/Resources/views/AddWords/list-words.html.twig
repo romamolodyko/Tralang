@@ -1,5 +1,19 @@
-{#{% extends "TralangBundle:AddWords:add.html.twig" %}#}
+{% extends "TralangBundle:AddWords:add.html.twig" %}
 
-{% block list %}
-    {{ id }}
+{% block list %}{#
+    {% for item in array %}
+        <tr>
+            <td>
+                <button type="button" class="btn btn-primary btn-xs play">
+                    <span class="glyphicon glyphicon-play"></span>
+                </button>
+            </td>
+            <td>{{ item.enWord }} - {{ item.ruWord }}</td>
+            <td>
+                <button type="button" class="btn btn-default btn-xs">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </td>
+        </tr>
+    {% endfor %}#}
 {% endblock %}

@@ -1,9 +1,11 @@
 /**
  * Created by Roma on 24.02.2016.
  */
-$(document).ready(initPage());
 
-function initPage() {
+    $('.content').on('click', function(){
+        $('.sign-up').css("display", "none");
+        $('.sign-in').css("display", "none");
+    });
 
     $('.sign-in-click').on('click', function () {
         $('.sign-up').css("display", "none");
@@ -14,6 +16,7 @@ function initPage() {
             var password = formArray['password'];
             error = validate(email, password);
             if (error) {
+                $('.warning-login').css('display', 'block');
                 $('.alert-warning strong').text(error);
             }
             else {
@@ -21,43 +24,24 @@ function initPage() {
                     {
                         email: email,
                         password: password
-                    },
-                    (function(){
-                        $('.alert-warning strong').text(data);
-                    })()
-                );
+                    }
+                ).done(function(data){
+                        if(data == "false"){
+                            $('.form-control').val("");
+                            $('.warning-login').css('display', 'block');
+                            $('.warning-login strong').text("That user doesn't exist!");
+                        }
+                        else{
+                            document.location.href = document.location.href+data;
+                        }
+                });
+
             }
-            return false;
         });
         checkInput("field-email");
         checkInput("field-password");
+        $('.send').on('click', function(){
+            console.log($(this).text());
+        })
 
     });
-
-    $('.sign-up-click').on('click', function(){
-        $('.sign-in').css("display", "none");
-        $('.sign-up').css("display", "block");
-        $('.check-sign-up').on('click', function () {
-            formArray = getFormValue("form-sign-up");
-            console.log(formArray);
-            /*var email = formArray['email'];
-            var password = formArray['password'];
-            error = validate(email, password);
-            if (error) {
-                $('.alert-warning strong').text(error);
-            }
-            else {
-                $.get('login',
-                    {
-                        email: email,
-                        password: password
-                    },
-                    (function(){
-                        $('.alert-warning strong').text(data);
-                    })()
-                );
-            }*/
-            return false;
-        });
-    });
-}

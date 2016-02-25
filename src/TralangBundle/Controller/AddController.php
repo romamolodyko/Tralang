@@ -4,6 +4,7 @@
 
     use Symfony\Bundle\FrameworkBundle\Controller\Controller;
     use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpFoundation\Response;
     use TralangBundle\Entity\Binding;
     use Symfony\Component\HttpFoundation\Session\Session;
     use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -15,6 +16,21 @@
          * @Route("/glossary", name = "glossary")
          */
         public function showWordsAction(){
+            $session = new Session();
+            $bind = new Binding();
+            $em = $this->getDoctrine()->getEntityManager();
+            $repository = $em->getRepository('TralangBundle:Binding');
+            $idWords = $repository->findBy(array('id_user' => $session->get('id')));
+            if(!isset($idWords)){
+                print_r('empty');
+            }
+            else{
+                $repository2 = $em->getRepository('TralangBundle:Words');
+                $words = $repository2->findBy(array('id' => $idWords));
+                return $this->render('TralangBundle:AddWords:list-words.html.twig', array('array' => $words));
+
+            }
+
             return $this->render('TralangBundle:AddWords:add.html.twig');
         }
 
@@ -25,15 +41,20 @@
             $words = new Words();
             $ruWord = $request->get("russiaWord");
             $enWord = $request->get("englishWord");
-            $words->setEnWord($enWord);
-            $words->setRuWord($ruWord);
             $em = $this->getDoctrine()->getEntityManager();
-            $em->persist($words);
-            $em->flush();
-            $id = $words->getId();
-            $b = $this->binding($id);
-            if($b){
-
+            $repository = $em->getRepository('TralangBundle:Words');
+            $fword = $repository->findBy(array('en_words' => $enWord, 'ru_words' => $ruWord));
+            if(!$fword){
+                $words->setEnWord($enWord);
+                $words->setRuWord($ruWord);
+                $em->persist($words);
+                $em->flush();
+                $id = $words->getId();
+                $b = $this->binding($id);
+                return new Response('true');
+            }
+            else{
+                return new Response('false');
             }
             return $this->render("TralangBundle:AddWords:list-words.html.twig", array("id" => $id));
         }

@@ -23,6 +23,13 @@
 </div>
 <audio src='' class="speech"></audio>
 <div class="all_words">
-    {% block list %}{% endblock %}
+    <div class="panel panel-default">
+        <div class="panel-heading">Words list</div>
+        <div class="words">
+            <table class="table table-hover">
+                {% block list %}{% endblock %}
+            </table>
+        </div>
+    </div>
 </div>
 {% endblock %}

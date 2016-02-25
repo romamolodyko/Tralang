@@ -7,6 +7,7 @@ function initPage(){
     var russiaWord = "";
     var englishWord = "";
 
+
     // Получить перевод слова
     $('.show_translate').on('click', function () {
         englishWord = $(".word").val().toLowerCase();
@@ -26,8 +27,7 @@ function initPage(){
                 russiaWord: russiaWord,
                 englishWord: englishWord,
                 date: parseInt(new Date().getTime() / 1000)
-            },
-            queryResult
+            }
         );
     });
 }
@@ -61,7 +61,7 @@ function getFormValue(nameForm){
 function validate(email, password) {
     var error = "";
     if(!email || !password){
-        error = "Fill in all the fields!"
+        error = "Fill in all the fields!";
         return error;
     }
     else return false;

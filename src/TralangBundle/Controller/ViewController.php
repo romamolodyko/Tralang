@@ -13,7 +13,7 @@ class ViewController extends Controller
      */
     public function indexAction(){
         $session = new Session();
-        $session->clear();
+        //$session->clear();
         print_r($session->get("name"));
         if($session->get("name") == ""){
             return $this->forward("TralangBundle:Auth:auth");

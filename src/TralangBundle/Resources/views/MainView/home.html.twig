@@ -7,6 +7,8 @@
             Welcome!
         {% endblock %}
     </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
     {% block stylesheets %}
         {% stylesheets '@TralangBundle/Resources/public/css/*' filter='cssrewrite' %}
         <link rel="stylesheet" href="{{ asset_url }}" />
@@ -26,7 +28,7 @@
             <a href="">Training words</a>
         </li>
         <li class="active">
-            <a href="">Logout</a>
+            <a href="{{ path('logout') }}">Logout</a>
         </li>
     </ul>
     <span class="navbar-brand navbar-right" style="padding-right: 22px; padding-top: 14px;">

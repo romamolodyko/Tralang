@@ -19,7 +19,7 @@ class AuthController extends Controller
         $name = "";
         $data = array();
         $data['error'] = array();
-        $data['error'] = "";
+        $data['error'] = true;
         if($_GET){
             $email = $request->get('email');
             $password = $request->get('password');
@@ -31,13 +31,13 @@ class AuthController extends Controller
                     $this->setSession($name, $user->getId());
                 }
                 else{
-                    $data['error'] = "That user doesn't exist";
+                    $data['error'] = false;
                     }
-            if ($data['error'] == ""){
-                //return $this->redirectToRoute('homepage');
+            if ($data['error'] == true){
+                return new Response("glossary");
             }
             else{
-                return new Response($data['error']);
+                return new Response("false");
             }
         }
         return $this->render('TralangBundle:MainView:index.html.twig');
@@ -50,11 +50,10 @@ class AuthController extends Controller
     public function regAction(Request $request){
         $data = array();
         $data['error'] = array();
-        if(($_POST)){
+        if(($_GET)){
             $userName = $request->get('name');
             $email = $request->get('email');
             $pass = $request->get('password');
-
             if(preg_match("#^[aA-zZ0-9]+$#", $userName) && preg_match("#^[aA-zZ0-9]+$#", $pass)){
                 if(strlen(trim($userName)) <= 20 && strlen(trim($userName)) >= 3){
                     if(filter_var($email, FILTER_VALIDATE_EMAIL)){
@@ -70,54 +69,54 @@ class AuthController extends Controller
                                 $em->persist($user);
                                 $em->flush();
 
-                                $this->setSession($userName, $user->getId());
+                                //$this->setSession($userName, $user->getId());
                             }
                             else{
-                                $data['error'] = "Пользователь с таким email уже существует";
+                                $data['error'] = "That user exist";
                             }
                         }
                         else{
-                            $data['error'] = "Некоректный пароль";
+                            $data['error'] = "Incorrect password";
                         }
                     }
                     else {
-                        $data['error'] = "Некоректный email";
+                        $data['error'] = "Incorrect email";
                     }
                 }
                 else{
-                    $data['error'] = "Некоректные даные в имени";
+                    $data['error'] = "Invalid data in the name";
                 }
             }
             else{
-                $data['error'] = "Логин или пароль имеют недоступные символы";
+                $data['error'] = "Login or password are unavailable characters";
             }
         }
         else{
-            $data['error'] = "Заполните поля";
+            $data['error'] = "Fill out the field";
         }
 
         if(!$data['error']){
-            return $this->render('TralangBundle:Training:choose-type.html.twig', array('name' => $userName));
+            return $this->forward("TralangBundle:Add:showWords");
         }
         else{
-            return $this->render('TralangBundle:MainView:index.html.twig', array('error' => $data['error']));
+            return new Response($data['error']);
         }
 
     }
 
     /**
-     * @Route("/logout", name = "logout")
+     * @Route("/", name = "logout")
      */
     public function logOutAction(){
         $session = new Session();
         $session->clear();
-        return $this->render("TralangBundle:MainView:index.html.twig");
+        return $this->forward("TralangBundle:View:index");
 
     }
 
     public function setSession($name, $id){
         $session = new Session();
-        $session->start();
+        //$session->start();
         $session->set('name', $name);
         $session->set('id', $id);
     }
