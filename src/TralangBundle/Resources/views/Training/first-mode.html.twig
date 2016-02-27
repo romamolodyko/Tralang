@@ -1,10 +1,13 @@
 {% extends 'TralangBundle:MainView:home.html.twig' %}
 
 {% block body %}
-    <div class="first_mode">
-        <div class="en_word"></div>
-        <div class="ru_word"></div>
-        <audio src='' class="speech"></audio>
-        <button type="button" id="query_words">Start</button>
+    <div class="jumbotron">
+    	<div class="container">
+    		<h1>This you can choose type of training</h1>
+    		<p>On this training you learn 5 new english words, from words which you added.</p>
+    		<p>
+                <button type="button" class="btn btn-primary btn-lg start-training">Start</button>
+    		</p>
+    	</div>
     </div>
 {% endblock %}

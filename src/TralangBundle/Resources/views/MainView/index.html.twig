@@ -93,7 +93,8 @@
         </div>
     </div>
     {% block body %}{% endblock %}
-    {% javascripts '@TralangBundle/Resources/public/js/*'%}
+    {% javascripts '@TralangBundle/Resources/public/js/*'
+    '@TralangBundle/Resources/public/js/ModeTraining/*'%}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
     </body>

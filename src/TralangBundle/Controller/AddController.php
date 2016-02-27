@@ -17,18 +17,19 @@
          */
         public function showWordsAction(){
             $session = new Session();
-            $bind = new Binding();
             $em = $this->getDoctrine()->getEntityManager();
             $repository = $em->getRepository('TralangBundle:Binding');
             $idWords = $repository->findBy(array('id_user' => $session->get('id')));
-            if(!isset($idWords)){
+            if(!$idWords){
                 print_r('empty');
             }
             else{
                 $repository2 = $em->getRepository('TralangBundle:Words');
-                $words = $repository2->findBy(array('id' => $idWords));
-                return $this->render('TralangBundle:AddWords:list-words.html.twig', array('array' => $words));
-
+                arsort($idWords);
+                foreach($idWords as $s){
+                    $words[] = $repository2->findBy(array('id' => $s->getIdWords()));
+                }
+                return $this->render('TralangBundle:AddWords:list-words.html.twig', array('array' => $words, 'id' => true));
             }
 
             return $this->render('TralangBundle:AddWords:add.html.twig');
@@ -49,14 +50,28 @@
                 $words->setRuWord($ruWord);
                 $em->persist($words);
                 $em->flush();
-                $id = $words->getId();
-                $b = $this->binding($id);
-                return new Response('true');
+                $b = $this->binding($words->getId());
+                return $this->render("TralangBundle:AddWords:set-one-word.html.twig", array("enWord" => $enWord, "ruWord" => $ruWord));;
             }
             else{
-                return new Response('false');
+                $id = $fword[0]->getId();
+                if(!$this->checkUserWord($id)){
+                    $b = $this->binding($id);
+                    return $this->render("TralangBundle:AddWords:set-one-word.html.twig", array("enWord" => $enWord, "ruWord" => $ruWord));;
+                }
+                else{
+                    return new Response('false');
+                }
             }
-            return $this->render("TralangBundle:AddWords:list-words.html.twig", array("id" => $id));
+
+        }
+
+        public function checkUserWord($idWord){
+            $session = new Session();
+            $em = $this->getDoctrine()->getEntityManager();
+            $repository = $em->getRepository('TralangBundle:Binding');
+            $idWords = $repository->findBy(array('id_word' => $idWord, 'id_user' => $session->get('id')));
+            return $idWords;
         }
 
         public function binding($idWord){
@@ -71,4 +86,5 @@
             $id = $binding->getId();
             return $id;
         }
+
     }

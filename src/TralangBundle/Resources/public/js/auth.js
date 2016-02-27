@@ -40,8 +40,4 @@
         });
         checkInput("field-email");
         checkInput("field-password");
-        $('.send').on('click', function(){
-            console.log($(this).text());
-        })
-
     });

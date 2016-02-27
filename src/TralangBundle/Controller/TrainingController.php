@@ -18,6 +18,4 @@
             return $this->render("TralangBundle:Training:first-mode.html.twig");
         }
 
-
-
     }

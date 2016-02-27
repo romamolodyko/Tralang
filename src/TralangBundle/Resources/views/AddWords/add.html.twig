@@ -1,8 +1,7 @@
 {% extends "TralangBundle:MainView:home.html.twig" %}
 
-{% block state %}<a class="navbar-brand" href="#">Log Out</a>{% endblock %}
-
 {% block body %}
+<h3 class="text-muted">Add words</h3>
 <div class="addWords">
 <div class="addBlock">
     <form>
@@ -17,7 +16,13 @@
     </form>
 </div>
 <div class="chooseTranslate">
-    <span class="input-group-addon send"></span>
+    <div class="alert-info send" style="text-align: center"></div>
+    <div class="alert alert-success alert-dismissible" role="alert">
+        Word successfully added!
+    </div>
+    <div class="alert alert-danger">
+        That words already exist!
+    </div>
 </div>
 <div class="state"></div>
 </div>

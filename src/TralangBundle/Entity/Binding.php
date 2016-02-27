@@ -53,7 +53,7 @@ class Binding
      * @return integer
      */
     public function getIdUser(){
-        $this->id_user;
+        return $this->id_user;
     }
 
     /**
@@ -61,6 +61,6 @@ class Binding
      * @return integer
      */
     public function getIdWords(){
-        $this->id_word;
+        return $this->id_word;
     }
 }

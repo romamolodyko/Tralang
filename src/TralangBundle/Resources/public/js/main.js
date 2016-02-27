@@ -22,25 +22,30 @@ function initPage(){
     // Добавить слово в БД
     $('.send').on('click', function () {
         russiaWord = $(this).text();
-        console.log(russiaWord);
-        /*$.get('add',
+        $.get('add',
             {
                 russiaWord: russiaWord,
                 englishWord: englishWord
-            },
-            queryResult
-        )*/
-    });
-}
+            }).done(function(data){
+                if(data == "false"){
+                    $(".alert-danger").css("display", "block");
+                }
+                else{
+                    $(".alert-success").css("display", "block");
+                    $('.table').prepend(data);
+                }
+                $(".send").css("display", "none");
+                $('.word').val("");
 
-function queryResult(){
-    consolo.log("blyaaaddddddddddddd");
+            })
+    });
 }
 
 function onAjaxSuccess (data) {
     $(".chooseTranslate").css("opacity", "1");
-    $(".chooseTranslate").css("display", "block");
-    $(".chooseTranslate").children().text(data.text[0]);
+    $(".send").css("display", "block");
+    $(".alert").css("display", "none");
+    $(".send").text(data.text[0]);
 }
 
 function checkInput(nameField){

@@ -2,11 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>
-        {% block title %}
-            Welcome!
-        {% endblock %}
-    </title>
+    <title>{% block title %}Welcome!{% endblock %}</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
     {% block stylesheets %}
@@ -18,31 +14,28 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 </head>
 <body>
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <a class="navbar-brand" href="{{ path('homepage') }}">Tralang</a>
     <ul class="nav navbar-nav">
         <li class="active">
-            <a href="">Add words</a>
+            <a href="{{ path('glossary') }}">Add words</a>
         </li>
         <li class="active">
-            <a href="">Training words</a>
+            <a href="{{ path('first-mode') }}">Training words</a>
         </li>
         <li class="active">
             <a href="{{ path('logout') }}">Logout</a>
         </li>
     </ul>
-    <span class="navbar-brand navbar-right" style="padding-right: 22px; padding-top: 14px;">
-        {% block signUp %}
-
-        {% endblock %}
-    </span>
+    <span class="navbar-brand navbar-right" style="padding-right: 22px; padding-top: 14px;"></span>
 </nav>
-<div class="container">
-    {% block body %}
-
-    {% endblock %}
+<div class="img">
+    <div class="container">
+        {% block body %}{% endblock %}
+    </div>
 </div>
-{% javascripts '@TralangBundle/Resources/public/js/*'%}
+{% javascripts '@TralangBundle/Resources/public/js/*'
+'@TralangBundle/Resources/public/js/ModeTraining/*'%}
 <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
 </body>

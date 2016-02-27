@@ -29,6 +29,22 @@
 .container{
     width: 1000px;
     margin: auto;
+    //margin-top: 50px;
+}
+
+.img{
+    background-image: url("http://st.houzz.com/simgs/9101c48200f301f3_4-3030/-wallpaper.jpg");
+
+    min-height: 100%;
+    min-width: 1024px;
+
+    /* Set up proportionate scaling */
+    width: 100%;
+    height: auto;
+
+    /* Set up positioning */
+    top: 0;
+    left: 0;
 }
 
 .sign-in{
@@ -51,4 +67,19 @@
 }
 .warning-login{
     display: none;
+}
+
+.chooseTranslate{
+    display: block;
+}
+.alert{
+    display: none;
+    margin: 0px;
+}
+.panel-default{
+    box-shadow: 0px 15px 49px 6px;
+    background-color: #F8F8F8;
+}
+.text-muted{
+    margin-top: 50px;
 }
