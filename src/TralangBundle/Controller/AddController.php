@@ -21,7 +21,8 @@
             $repository = $em->getRepository('TralangBundle:Binding');
             $idWords = $repository->findBy(array('id_user' => $session->get('id')));
             if(!$idWords){
-                print_r('empty');
+                $err = "Add a words!";
+                return $this->render("TralangBundle:AddWords:add.html.twig", array('empty' => $err));
             }
             else{
                 $repository2 = $em->getRepository('TralangBundle:Words');
@@ -39,6 +40,8 @@
          * @Route("/add", name = "add")
          */
         public function addWordAction(Request $request){
+            $session = new Session();
+            $idUser = $session->get('id');
             $words = new Words();
             $ruWord = $request->get("russiaWord");
             $enWord = $request->get("englishWord");
@@ -66,6 +69,24 @@
 
         }
 
+        /**
+         * @Route("/delete", name = "delete")
+         */
+        public function deleteWordAction(Request $request){
+            $id = $request->get('id');
+            $em = $this->getDoctrine()->getEntityManager();
+            $entity = $em->getRepository('TralangBundle:Binding')->findOneBy(array('id_word' => $id));
+            if ($entity != null){
+                $em->remove($entity);
+                $em->flush();
+                return new Response("true");
+            }
+            else{
+                return new Response("false");
+            }
+
+
+        }
         public function checkUserWord($idWord){
             $session = new Session();
             $em = $this->getDoctrine()->getEntityManager();

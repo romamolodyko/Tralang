@@ -57,7 +57,7 @@ class AuthController extends Controller
             if(preg_match("#^[aA-zZ0-9]+$#", $userName) && preg_match("#^[aA-zZ0-9]+$#", $pass)){
                 if(strlen(trim($userName)) <= 20 && strlen(trim($userName)) >= 3){
                     if(filter_var($email, FILTER_VALIDATE_EMAIL)){
-                        if(strlen(trim($pass)) <=12 && strlen(trim($pass)) >= 3) {
+                        if(strlen(trim($pass)) <=12 && strlen(trim($pass)) >= 5) {
                             $findUser = $this->findOne($email, $pass);
                             if(!$findUser){
                                 $user = new Users();
@@ -68,8 +68,8 @@ class AuthController extends Controller
                                 $em = $this->getDoctrine()->getEntityManager();
                                 $em->persist($user);
                                 $em->flush();
-
-                                //$this->setSession($userName, $user->getId());
+                                $name = $user->getName();
+                                $this->setSession($name, $user->getId());
                             }
                             else{
                                 $data['error'] = "That user exist";
@@ -96,7 +96,7 @@ class AuthController extends Controller
         }
 
         if(!$data['error']){
-            return $this->forward("TralangBundle:Add:showWords");
+            return new Response("true");
         }
         else{
             return new Response($data['error']);

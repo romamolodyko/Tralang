@@ -32,7 +32,7 @@
         <div class="panel-heading">Words list</div>
         <div class="words">
             <table class="table table-hover">
-                {% block list %}{% endblock %}
+                {% block list %}{{ empty | default("") }}{% endblock %}
             </table>
         </div>
     </div>

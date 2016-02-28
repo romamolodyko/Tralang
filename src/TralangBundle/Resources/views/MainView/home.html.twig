@@ -14,20 +14,22 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <a class="navbar-brand" href="{{ path('homepage') }}">Tralang</a>
-    <ul class="nav navbar-nav">
-        <li class="active">
-            <a href="{{ path('glossary') }}">Add words</a>
-        </li>
-        <li class="active">
-            <a href="{{ path('first-mode') }}">Training words</a>
-        </li>
-        <li class="active">
-            <a href="{{ path('logout') }}">Logout</a>
-        </li>
-    </ul>
-    <span class="navbar-brand navbar-right" style="padding-right: 22px; padding-top: 14px;"></span>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="size-nav">
+        <a class="navbar-brand" href="{{ path('homepage') }}">Tralang</a>
+        <ul class="nav nav-pills pull-right">
+            <li>
+                <a href="{{ path('glossary') }}">Add words</a>
+            </li>
+            <li>
+                <a href="{{ path('first-mode') }}">Training words</a>
+            </li>
+            <li>
+                <a href="{{ path('logout') }}">Logout</a>
+            </li>
+        </ul>
+        <span class="navbar-brand navbar-right" style="padding-right: 22px; padding-top: 14px;"></span>
+    </div>
 </nav>
 <div class="img">
     <div class="container">

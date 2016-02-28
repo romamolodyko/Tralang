@@ -5,13 +5,13 @@
         {% for i in item %}
             <tr>
                 <td>
-                    <button type="button" class="btn btn-primary btn-xs play">
+                    <button type="button" class="btn btn-primary btn-xs play" data-word-id={{ i.id }}>
                         <span class="glyphicon glyphicon-play"></span>
                     </button>
                 </td>
                 <td>{{ i.enWord }} - {{ i.ruWord }}</td>
                 <td>
-                    <button type="button" class="btn btn-default btn-xs">
+                    <button type="button" class="btn btn-default btn-xs delete-word" data-word-id={{ i.id }}>
                         <span class="glyphicon glyphicon-trash"></span>
                     </button>
                 </td>
