@@ -1,3 +1,6 @@
+/**
+ * Created by Roma on 02.03.2016.
+ */
 
 function onAjaxSuccess (data) {
     $(".chooseTranslate").css("opacity", "1");
@@ -35,7 +38,41 @@ function validate(email, password) {
     else return false;
 }
 
+
+function onClickDelete(){
+    $('.delete-word').on('click', function(){
+        var idWord = $(this).attr("data-word-id");
+        var self = this;
+        $.get('delete',
+            {
+                id : idWord
+            }
+        ).done(function(data){
+                if(data == "true"){
+                    $(self).closest('tr').remove();
+                }
+                else{
+                    $(".alert-danger").val("The word is not removed(");
+                    $(".alert-danger").css("display", "block");
+                }
+            })
+    })
+}
+
+function onClickPlay(){
+    $('.play').on('click', function(){
+        var r = $(this).closest('tr').first().text().split(' - '), s = "";
+        s = r[0].replace(/\n\s+/, "");
+        playWord(s);
+    });
+}
+
 function playWord(word){
     var url = "https://tts.voicetech.yandex.net/tts?text="+word+"&lang=en_GB&format=wav&quality=lo&platform=web&application=translate";
     $('audio').attr('src', url).get(0).play();
+}
+
+function shuffle(o){
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
 }

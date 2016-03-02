@@ -45,33 +45,6 @@ function initPage(){
 }
 
 
-function onClickDelete(){
-    $('.delete-word').on('click', function(){
-        var idWord = $(this).attr("data-word-id");
-        var self = this;
-        $.get('delete',
-            {
-                id : idWord
-            }
-        ).done(function(data){
-                if(data == "true"){
-                    $(self).closest('tr').remove();
-                }
-                else{
-                    $(".alert-danger").val("The word is not removed(");
-                    $(".alert-danger").css("display", "block");
-                }
-            })
-    })
-}
-
-function onClickPlay(){
-    $('.play').on('click', function(){
-        var r = $(this).closest('tr').first().text().split(' - '), s = "";
-        s = r[0].replace(/\n\s+/, "");
-        playWord(s);
-    });
-}
 
 
 
