@@ -1,13 +1,38 @@
 {% extends 'TralangBundle:MainView:home.html.twig' %}
 
 {% block body %}
-    <div class="jumbotron">
+    <div class="jumbotron choose-mode">
     	<div class="container">
-    		<h1>This you can choose type of training</h1>
-    		<p>On this training you learn 5 new english words, from words which you added.</p>
+    		<h1>On this training you learn 5 new english words, from words which you added.</h1>
     		<p>
                 <button type="button" class="btn btn-primary btn-lg start-training">Start</button>
     		</p>
     	</div>
     </div>
+    <div class="learn-words">
+        <div class="learn-words-container">
+            <div class="text"></div>
+            <div class="textTranslate"></div>
+            <div class="btn">
+                <button type="button" class="btn btn-default next-word">Next</button>
+            </div>
+        </div>
+    </div>
+    <audio src='' class="speech"></audio>
+    <div class="second_mode">
+        <div class="second-mode-container">
+            <div class="learn-text" style="background-color: #5bc0de; font-size: 24px"></div>
+            <div class="learn-text-translate">
+                <ul class="words_list list-group">
+                    <li class="list-group-item"></li>
+                    <li class="list-group-item"></li>
+                    <li class="list-group-item"></li>
+                    <li class="list-group-item"></li>
+                    <li class="list-group-item"></li>
+                </ul>
+            </div>
+            <button type="button" class="btn btn-default next-group-word">Next</button>
+        </div>
+    </div>
+
 {% endblock %}

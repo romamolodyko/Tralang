@@ -78,12 +78,12 @@ class Words
      *
      * @return Words
      */
-   /* public function setRuWords($ruWords)
+    public function setRuWords($ruWords)
     {
         $this->ru_words = $ruWords;
 
         return $this;
-    }*/
+    }
 
     /**
      * Get ruWords

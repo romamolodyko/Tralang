@@ -29,6 +29,7 @@
 .container{
     width: 1000px;
     margin: auto;
+    margin-top: 79px;
 }
 
 .img{
@@ -81,7 +82,7 @@
     background-color: #F8F8F8;
 }
 .text-muted{
-    margin-top: 50px;
+    margin: 0px;
 }
 
 .words{
@@ -96,4 +97,33 @@
 
 .nav-pills{
     margin-top: 6px;
+}
+.learn-words{
+    width: 500px;
+    margin: auto;
+    display: none;
+    margin-top: 100px;
+}
+.learn-words-container{
+    border: solid 1px #FFFAF6;
+    background-color: #FFFFFF;
+    box-shadow: #F0F0F0 0px 0px 35px 16px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 36px;
+    line-height: 1.5;
+    font-family: cursive;
+}
+
+.second-mode-container{
+    width: 600px;
+    margin: auto;
+    border: solid 1px #FFFAF6;
+    background-color: #FFFFFF;
+    box-shadow: #F0F0F0 0px 0px 35px 16px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 16px;
+    line-height: 1.5;
+    font-family: cursive;
 }

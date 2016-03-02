@@ -1,41 +1,87 @@
-// Получить набор слов для тренировки
+// РџРѕР»СѓС‡РёС‚СЊ РЅР°Р±РѕСЂ СЃР»РѕРІ РґР»СЏ С‚СЂРµРЅРёСЂРѕРІРєРё
+LearnMode = function(){
+    var self = this;
+    this.packageWords;
 
-/*$('#query_words').on('click', function(){
-    $.ajax({
-        url: window.prefix+'/?controller=PracticeWords&action=getWords',
-        success : parseQuery
+    this.counter = 0;
+
+    this.state = 0;
+
+    this.learnWords = function(objectWord){
+        var word = objectWord.words[objectWord.word_seq[this.counter]];
+        $('.text').text(word.text);
+        $('.textTranslate').text(word.textTranslate);
+        this.playWord(word.text);
+    };
+
+    this.chooseRightWord = function(objectWord, idW){
+        var li = $('.words_list li');
+        t = objectWord.words[objectWord.word_seq[this.counter]];
+        mixWords = t.mix_words;
+        var wordSeq = [], word = [];
+        for(id in mixWords){
+            wordSeq.push(id);
+        }
+        for(var i = 0; i<wordSeq.length; i++){
+            word.push(mixWords[wordSeq[i]].text+"-"+mixWords[wordSeq[i]].textTranslate);
+        }
+        word.push(t.text+"-"+ t.textTranslate);
+        shuffle(word);
+        if(idW == 0){
+            $('.learn-text').text(t.textTranslate);
+        }
+        else{
+            $('.learn-text').text(t.text);
+        }
+        for(var j = 0; word.length > j; j++){
+            var words = word[j].split('-');
+            $(li[j]).text(words[idW]);
+        }
+    };
+
+    this.playWord = function(word){
+        var url = "https://tts.voicetech.yandex.net/tts?text="+word+"&lang=en_GB&format=wav&quality=lo&platform=web&application=translate";
+        $('audio').attr('src', url).get(0).play();
+    }
+};
+var counter = 0;
+var Generate = new LearnMode();
+
+$('.start-training').on('click', function(){
+    $.get('getWords').done(function(data){
+        Generate.packageWords = JSON.parse(data);
+        Generate.learnWords(Generate.packageWords);
+        $('.choose-mode').css('display', 'none');
+        $('.learn-words').css('display', 'block');
     });
-    FirstMode.counter = 0;
-    $('#query_words').css("display", "none");
-    $('.next_word').css("display", "block");
 });
 
-// Вызов следующего слова
-$('.next_word').on('click', function(){
-    FirstMode.counter++;
-    FirstMode.setWord(General.packageWords, FirstMode.counter);
-});
-*/
-
-/*
-FirstMode.setWord = function(word, counter){
-    if(counter < 5){
-        var word = word[counter].split(" ");
-        $('.en_word').text(word[1]);
-        $('.ru_word').text(word[0]);
-        playWord(word[1]);
+$('.next-word').on('click', function(){
+    if(Generate.counter < 4){
+        Generate.counter += 1;
+        Generate.learnWords(Generate.packageWords);
     }
     else{
-        SecondMode.start();
+        $('.second_mode').css('display', 'block');
+        $('.learn-words').css('display', 'none');
+        Generate.counter = 0;
+        Generate.chooseRightWord(Generate.packageWords, id=0);
     }
+});
+$('.next-group-word').on('click', function(){
+    if(Generate.state == 0){
+        if(Generate.counter < 4){
+            Generate.counter += 1;
+            Generate.chooseRightWord(Generate.packageWords, id=0);
+        }
+        else{
+            Generate.counter = 0;
+            Generate.state = 1;
+            Generate.chooseRightWord(Generate.packageWords, id=1);
+        }
 
-};
-
-SecondMode.start = function(){
-    $('.next_word').attr("class", "second");
-    $('.second').css('display', "none");
-    $('.first_mode').css('display', "none");
-    $('.second_mode').css('display', "block");
-    var arrayWords = General.packageWords;
-    nextWord(1, 0, arrayWords);
-};*/
+    }else{
+        Generate.counter += 1;
+        Generate.chooseRightWord(Generate.packageWords, id=1);
+    }
+});

@@ -3562,136 +3562,95 @@ function validate(email, password) {
     else return false;
 }
 
-
-
-
-function randomInteger(max) {
-    var rand = 0 - 0.5 + Math.random() * (max - 0 + 1);
-    rand = Math.round(rand);
-    return rand;
-}
-
-function divide(string, number){
-    var t = string.split(' ');
-    return t[number];
-}
-
-function getWord(array, n){
-    var word = [];
-    for (var i = 0; array.length > i; i++) {
-        word.push(divide(array[i], n));
-    }
-    return word;
-}
-
-function parseQuery (e){
-    var t = JSON.parse(e);
-    for (var i = 0; i < t.length; i++){
-        //a[t[i]['en_words']] = t[i]['ru_words'];
-        General.packageWords.push(t[i]['ru_words']+' '+t[i]['en_words']);
-    }
-    SecondMode.package = ocopy(General.packageWords);
-    FirstMode.setWord(General.packageWords, FirstMode.counter);
-}
-
-function shuffle(o){
-    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-    return o;
-}
-
-function ocopy(o) {
-    var no = [];
-    for (var k in o) {
-        no[k] = o[k];
-    }
-    return no
-}
-
-function nextWord(idShowWord, idShowWord2, array){
-    var random = randomInteger(array.length-1);
-    var en = array[random].split(' ');
-    $('.one_en_word').text(en[idShowWord]).attr("data-translate",en[idShowWord2]);
-    playWord(en[idShowWord]);
-    nextGroupWord(array[random], idShowWord2);
-    array.splice(random, 1);
-}
-
-function nextGroupWord(rightWord, idShowWord2) {
-    var word = rightWord.split(' ');
-    Counter--;
-    $.get(window.prefix + '/?controller=PracticeWords&action=getWrongWords',
-        {
-            rightWord : word[0]
-        },
-        function (data) {
-            var t = JSON.parse(data);
-            var li = $('.words_list li');
-            var a = [];
-            for (var i = 0; i < t.length; i++) {
-                a.push(t[i]['ru_words'] + ' ' + t[i]['en_words']);
-            }
-            a.push(rightWord);
-            var w = shuffle(a);
-            for(var j = 0; w.length > j; j++){
-                var word = w[j].split(' ');
-                $(li[j]).text(word[idShowWord2]);
-            }
-
-        });
-}
-
-function setState(text, state){
-    $.get(window.prefix + '/?controller=PracticeWords&action=setStateWord',
-        {
-            word : text,
-            state : state
-        });
-}
-
 function playWord(word){
     var url = "https://tts.voicetech.yandex.net/tts?text="+word+"&lang=en_GB&format=wav&quality=lo&platform=web&application=translate";
     $('audio').attr('src', url).get(0).play();
 }
 
+// РџРѕР»СѓС‡РёС‚СЊ РЅР°Р±РѕСЂ СЃР»РѕРІ РґР»СЏ С‚СЂРµРЅРёСЂРѕРІРєРё
+LearnMode = function(){
+    var self = this;
+    this.packageWords;
 
-// Получить набор слов для тренировки
+    this.counter = 0;
 
-/*$('#query_words').on('click', function(){
-    $.ajax({
-        url: window.prefix+'/?controller=PracticeWords&action=getWords',
-        success : parseQuery
+    this.state = 0;
+
+    this.learnWords = function(objectWord){
+        var word = objectWord.words[objectWord.word_seq[this.counter]];
+        $('.text').text(word.text);
+        $('.textTranslate').text(word.textTranslate);
+        this.playWord(word.text);
+    };
+
+    this.chooseRightWord = function(objectWord, idW){
+        var li = $('.words_list li');
+        t = objectWord.words[objectWord.word_seq[this.counter]];
+        mixWords = t.mix_words;
+        var wordSeq = [], word = [];
+        for(id in mixWords){
+            wordSeq.push(id);
+        }
+        for(var i = 0; i<wordSeq.length; i++){
+            word.push(mixWords[wordSeq[i]].text+"-"+mixWords[wordSeq[i]].textTranslate);
+        }
+        word.push(t.text+"-"+ t.textTranslate);
+        shuffle(word);
+        if(idW == 0){
+            $('.learn-text').text(t.textTranslate);
+        }
+        else{
+            $('.learn-text').text(t.text);
+        }
+        for(var j = 0; word.length > j; j++){
+            var words = word[j].split('-');
+            $(li[j]).text(words[idW]);
+        }
+    };
+
+    this.playWord = function(word){
+        var url = "https://tts.voicetech.yandex.net/tts?text="+word+"&lang=en_GB&format=wav&quality=lo&platform=web&application=translate";
+        $('audio').attr('src', url).get(0).play();
+    }
+};
+var counter = 0;
+var Generate = new LearnMode();
+
+$('.start-training').on('click', function(){
+    $.get('getWords').done(function(data){
+        Generate.packageWords = JSON.parse(data);
+        Generate.learnWords(Generate.packageWords);
+        $('.choose-mode').css('display', 'none');
+        $('.learn-words').css('display', 'block');
     });
-    FirstMode.counter = 0;
-    $('#query_words').css("display", "none");
-    $('.next_word').css("display", "block");
 });
 
-// Вызов следующего слова
-$('.next_word').on('click', function(){
-    FirstMode.counter++;
-    FirstMode.setWord(General.packageWords, FirstMode.counter);
-});
-*/
-
-/*
-FirstMode.setWord = function(word, counter){
-    if(counter < 5){
-        var word = word[counter].split(" ");
-        $('.en_word').text(word[1]);
-        $('.ru_word').text(word[0]);
-        playWord(word[1]);
+$('.next-word').on('click', function(){
+    if(Generate.counter < 4){
+        Generate.counter += 1;
+        Generate.learnWords(Generate.packageWords);
     }
     else{
-        SecondMode.start();
+        $('.second_mode').css('display', 'block');
+        $('.learn-words').css('display', 'none');
+        Generate.counter = 0;
+        Generate.chooseRightWord(Generate.packageWords, id=0);
     }
+});
+$('.next-group-word').on('click', function(){
+    if(Generate.state == 0){
+        if(Generate.counter < 4){
+            Generate.counter += 1;
+            Generate.chooseRightWord(Generate.packageWords, id=0);
+        }
+        else{
+            Generate.counter = 0;
+            Generate.state = 1;
+            Generate.chooseRightWord(Generate.packageWords, id=1);
+        }
 
-};
-
-SecondMode.start = function(){
-    $('.next_word').attr("class", "second");
-    $('.second').css('display', "none");
-    $('.first_mode').css('display', "none");
-    $('.second_mode').css('display', "block");
-    var arrayWords = General.packageWords;
-    nextWord(1, 0, arrayWords);
-};*/
+    }else{
+        Generate.counter += 1;
+        Generate.chooseRightWord(Generate.packageWords, id=1);
+    }
+});

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="TralangBundle\Entity\BindingRepository")
+ * @ORM\Entity
  * @ORM\Table(name="binding")
  */
 class Binding
