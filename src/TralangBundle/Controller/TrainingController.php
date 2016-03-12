@@ -28,6 +28,7 @@
             $id = $session->get('id');
             $w = [];
             $w2 = [];
+            $w3 = [];
             $count = 5;
             $c = 0;
             $c2 = 0;
@@ -36,11 +37,10 @@
             $arr = $repository->getRandomEntities($count, $id);
             foreach($arr as $p){
                 $word = $em->getRepository('TralangBundle:Words')->findBy(array('id' => $p['id_word']));
-                $w['words'][$p['id_word']]['text'] = $word[0]->getEnWord();
-                $w['words'][$p['id_word']]['textTranslate'] = $word[0]->getRuWord();
+                $w3['text'] = $w['words'][$p['id_word']]['text'] = $word[0]->getEnWord();
+                $w3['textTranslate'] = $w['words'][$p['id_word']]['textTranslate'] = $word[0]->getRuWord();
                 $w['word_seq'][$c] = $p['id_word'];
                 $c++;
-                /*Add four random words to object*/
                 $arr2 = $repository->getRandomOtherEntities($count=4, $id, $p['id_word']);
                 foreach($arr2 as $p2){
                     $word2 = $em->getRepository('TralangBundle:Words')->findBy(array('id' => $p2['id_word']));
@@ -50,7 +50,10 @@
                     $w['words'][$p['id_word']]['word_seq'][$c2] = $p2['id_word'];
                     $c2++;
                 }
+                $w['words'][$p['id_word']]['mix_words'][$p['id_word']] = $w3;
+                $w['words'][$p['id_word']]['word_seq'][$c2] = $p['id_word'];
                 $w2 = array();
+                shuffle($w['words'][$p['id_word']]['word_seq']);
             }
 
             return new Response(json_encode($w, JSON_UNESCAPED_UNICODE));

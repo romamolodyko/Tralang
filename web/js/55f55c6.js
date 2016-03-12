@@ -1,4 +1,162 @@
 /**
+ * Javascript classes
+ * Created by Ruslan Molodyko
+ */
+(function() {
+
+    var Class = (function fn() {
+        "use strict";
+
+        /**
+         * Use fn as object container
+         */
+        return fn.o = new (function() {
+
+            /**
+             * Save link to class
+             * @type {Class}
+             */
+            var self = this;
+
+            /**
+             * Create constructor of raw class
+             */
+            this.constructor = function() {};
+
+            /**
+             * This is static function of class
+             * Which creates some class by function container
+             *
+             * @param fn
+             * @returns {Function}
+             */
+            this.constructor.create = function(fn, parent) {
+
+                /**
+                 * Get error if first arg is not a function
+                 */
+                if (typeof fn !== 'function') {
+                    throw new Error('Fn is not a function');
+                }
+
+                var hasConstructor = !((new fn()).constructor === fn),
+                    hasParent = typeof parent === 'function';
+
+                /**
+                 * If need inherite classes
+                 * If parent is object then add it to top of prototype inheritance
+                 *
+                 * For call parent constructor is it is exists call:
+                 * this.parentClass.constructor.call(this, panel);
+                 * this.parentClass.constructor.apply(this, arguments)
+                 */
+                if (hasParent) {
+
+                    /**
+                     * Inheritate prototype of classes
+                     * @type {Object}
+                     */
+                    fn.prototype = parent.prototype;
+                    fn.prototype.parentClass = parent.prototype;
+                }
+
+                /**
+                 * Create new object by passed function
+                 */
+                var o = new fn();
+
+                /**
+                 * If new class hasn't define constructor then set default
+                 * And has parent class
+                 */
+                if (!hasConstructor && hasParent) {
+
+                    // Save previous constructor
+                    var selfConstructor = o.constructor;
+
+                    /**
+                     * Set default constructor which will be call prent constructor with arguments
+                     */
+                    o.constructor = function() {
+                        this.parentClass.constructor.apply(this, arguments);
+                    };
+
+                    /**
+                     * Add static properties from parent class
+                     */
+                    self.extend(o.constructor, o.parentClass.constructor);
+
+
+                    /**
+                     * Add static properties from this class
+                     */
+                    self.extend(o.constructor, selfConstructor);
+                }
+
+                /**
+                 * Set link to constructor and self to get static variables
+                 */
+                o.self = constructor;
+
+                /**
+                 * Set prototype to constructor
+                 */
+                o.constructor.prototype = o;
+
+                /**
+                 * Add get instance method for each class
+                 * @returns {p|*|p1}
+                 */
+                o.constructor.getInstance = function() {
+                    if (this.instance == null) {
+
+                        // Create context for use as context of costructor
+                        var context = Object(o);
+
+                        // Call constructor with arguments
+                        o.constructor.apply(context, arguments);
+
+                        // Save instance
+                        this.instance = context;
+                    }
+                    return this.instance;
+                };
+
+                /**
+                 * Return class constructor
+                 */
+                return o.constructor;
+            };
+
+            /**
+             * Add properties first level from one object to another
+             *
+             * @param dest
+             * @param source
+             */
+            this.extend = function (dest, source) {
+                for (var i in source) {
+                    if (source.hasOwnProperty(i)) {
+                        dest[i] = source[i];
+                    }
+                }
+            };
+
+        })(), fn.o.constructor.prototype = fn.o, fn.o.constructor.self = fn.o.constructor, fn.o.constructor;
+    })();
+
+    /**
+     * Export script to nodejs or browser
+     */
+    /*if (module != null && typeof module.exports !== 'undefined') {
+        module.exports = Class;
+    } else {
+        window['ABone'] = Class;
+    }*/
+    window['ABone'] = Class;
+})();
+
+/**
  * Created by Roma on 24.02.2016.
  */
 
@@ -3526,78 +3684,174 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
     };
 }));
 
-/**
- * Created by Roma on 20.02.2016.
- */
-$(document).ready(initPage());
 
-function initPage(){
-    var russiaWord = "";
-    var englishWord = "";
+function initPage() {
+    "use strict";
 
-    onClickDelete();
-    onClickPlay();
+    var russiaWord = "",
+        englishWord = "";
 
     // œÓÎÛ˜ËÚ¸ ÔÂÂ‚Ó‰ ÒÎÓ‚‡
     $('.show_translate').on('click', function () {
+        var translateLink = 'https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20160125T224254Z.e65448e92af94329.f3a26d05cde4ad6f448cefd8598c707b8d722a5e';
         englishWord = $(".word").val().toLowerCase();
-        $.get('https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20160125T224254Z.e65448e92af94329.f3a26d05cde4ad6f448cefd8598c707b8d722a5e',
-            {
-                text: englishWord,
-                lang: 'en-ru'
-            },
-            onAjaxSuccess);
+        $.get(translateLink, {
+            text: englishWord,
+            lang: 'en-ru'
+        }, onAjaxSuccess);
     });
 
     // ƒÓ·‡‚ËÚ¸ ÒÎÓ‚Ó ‚ ¡ƒ
     $('.send').on('click', function () {
         russiaWord = $(this).text();
-        $.get('add',
-            {
-                russiaWord: russiaWord,
-                englishWord: englishWord
-            }).done(function(data){
-                if(data == "false"){
-                    $(".alert-danger").css("display", "block");
-                    $(".words").css("height", "455px");
-                }
-                else{
-                    $(".alert-success").css("display", "block");
-                    $('.table').prepend(data);
-                    $(".words").css("height", "455px");
-                }
-                $(".send").css("display", "none");
-                $('.word').val("");
-            })
+        $.get('add', {
+            russiaWord: russiaWord,
+            englishWord: englishWord
+        }).done(function (data) {
+            if (data == "false") {
+                $(".alert-danger").css("display", "block");
+                $(".words").css("height", "455px");
+            } else {
+                $(".alert-success").css("display", "block");
+                $('.table').prepend(data);
+                $(".words").css("height", "455px");
+            }
+            $(".send").css("display", "none");
+            $('.word').val("");
+        });
     });
+
+    onClickDelete();
+    onClickPlay();
 }
 
+$(document).ready(initPage());
 
 
+var TrainLW = function (oneWordData, nextWord) {
+    'use strict';
 
+    this.data = oneWordData;
+    this.getNextWord = nextWord;
+    this.word = $('.word');
+    this.translateWord = $('.word-translate');
+    this.buttonNext = $('.next-word');
 
-
-LearnMode = function(){
-    var self = this;
-    this.packageWords;
-
-    this.counter = 0;
-
-    this.state = 0;
-
-    this.learnWords = function(objectWord){
-        var word = objectWord.words[objectWord.word_seq[this.counter]];
-        $('.text').text(word.text);
-        $('.textTranslate').text(word.textTranslate);
-        this.playWord(word.text);
+    this.start = function () {
+        this.setView();
+        this.buttonNext.on('click', this.nextWord);
     };
 
-    this.chooseRightWord = function(objectWord, idW){
-        var li = $('.words_list li');
-        t = objectWord.words[objectWord.word_seq[this.counter]];
+    this.nextWord = function () {
+        if (typeof this.getNextWord === 'function') {
+            this.getNextWord();
+        }
+    };
+
+    this.setView = function () {
+        this.sound();
+        $('.choose-mode').css('display', 'none');
+        $('.learn-words').css('display', 'block');
+        this.word.text(this.data.text);
+        this.translateWord.text(this.oneWordToShow.textTranslate);
+    }.bind(this);
+
+    this.sound = function () {
+        var url = "https://tts.voicetech.yandex.net/tts?text=" + this.oneWordToShow + "&lang=en_GB&format=wav&quality=lo&platform=web&application=translate";
+        $('audio').attr('src', url).get(0).play();
+    };
+};
+var TrainWT = function (oneWordData, onEndTest) {
+    'use strict';
+
+    this.data = oneWordData;
+    this.onEndTest = onEndTest;
+    this.li = $('.words_list li');
+    this.liText = $('.learn-text');
+    this.buttonList = $('.list-group-item');
+    this.buttonNext = $('.next-group-word');
+    this.answer = null;
+    this.oneWordToShow = this.data.text;
+    var self = this;
+
+    /**
+     *
+     */
+    this.start = function () {
+        this.setView();
+        this.buttonNext.off('click');
+        this.buttonList.on('click', this.onAnswer);
+        this.buttonNext.on('click', this.onEnd);
+    };
+
+    this.onAnswer = function () {
+        if (self.oneWordToShow == $(this).attr('data-translate')) {
+            self.answer = true;
+            $(this).attr('class', "list-group-item list-group-item-success");
+        } else {
+            self.answer = false;
+            $(this).attr('class', "list-group-item list-group-item-danger");
+        }
+        self.buttonList.off('click');
+        // ... if true or wrong answer
+    };
+
+    this.onEnd = function () {
+        // Get answer result is true or false
+        if (typeof this.onEndTest === 'function') {
+            this.onEndTest(this.answer);
+        } else {
+            throw new Error('On end handler is not a function');
+        }
+    }.bind(this);
+
+    this.setView = function () {
+        this.sound();
+        $('.list-group-item').attr('class', "list-group-item");
+        $('.choose-mode').css('display', 'none');
+        $('.second_mode').css('display', 'block');
+        var i = 0, word = "";
+        this.liText.text(this.oneWordToShow);
+        for (i; i < this.data.word_seq.length; i++) {
+            word = this.data.mix_words[this.data.word_seq[i]];
+            $(this.li[i]).text(word.textTranslate).attr('data-translate', word.text);
+        }
+    }.bind(this);
+
+    this.sound = function () {
+        var url = "https://tts.voicetech.yandex.net/tts?text=" + this.oneWordToShow + "&lang=en_GB&format=wav&quality=lo&platform=web&application=translate";
+        $('audio').attr('src', url).get(0).play();
+    };
+};
+/*LearnMode = function () {
+    var self = this;
+    this.packageWords = [];
+    this.counter = 0;
+    this.state = 0;
+    this.learningWords = [];
+
+    this.learnWords = function (objectWord) {
+        try {
+            var word = objectWord.words[objectWord.word_seq[this.counter]];
+            $('.text').text(word.text);
+            $('.textTranslate').text(word.textTranslate);
+            this.playWord(word.text);
+        } catch (err) {
+            $('.error-message').text('Before learn words you need add it!');
+            $('.error-block').css('display', 'block');
+            $('.next-word').css('display', 'none');
+        }
+        //var word = objectWord.words[objectWord.word_seq[this.counter]];
+        //$('.text').text(word.text);
+        //$('.textTranslate').text(word.textTranslate);
+        //this.playWord(word.text);
+    }
+
+    this.chooseRightWord = function (objectWord, idW) {
+        var li = $('.words_list li'), mixWords = [], wordSeq = [], word = [];
+        var t = objectWord.words[objectWord.word_seq[this.counter]];
         mixWords = t.mix_words;
-        var wordSeq = [], word = [];
-        for(id in mixWords){
+        for (id in mixWords){
             wordSeq.push(id);
         }
         for(var i = 0; i<wordSeq.length; i++){
@@ -3606,10 +3860,10 @@ LearnMode = function(){
         word.push(t.text+"-"+ t.textTranslate);
         shuffle(word);
         if(idW == 0){
-            $('.learn-text').text(t.textTranslate);
+            $('.learn-text').text(t.textTranslate).attr('data-translate', t.text);
         }
         else{
-            $('.learn-text').text(t.text);
+            $('.learn-text').text(t.text).attr('data-translate', t.textTranslate);
         }
         for(var j = 0; word.length > j; j++){
             var words = word[j].split('-');
@@ -3620,35 +3874,51 @@ LearnMode = function(){
     this.playWord = function(word){
         var url = "https://tts.voicetech.yandex.net/tts?text="+word+"&lang=en_GB&format=wav&quality=lo&platform=web&application=translate";
         $('audio').attr('src', url).get(0).play();
-    }
-};
-// –ü–æ–ª—É—á–∏—Ç—å –Ω–∞–±–æ—Ä —Å–ª–æ–≤ –¥–ª—è —Ç—Ä–µ–Ω–∏—Ä–æ–≤–∫–∏
+    };
 
+    this.result = function(){
+        for(var i = 0; i < this.learningWords.length; i++){
+            t = this.learningWords[i].split('-');
+            if (t[1] == 0){
+                console.log(t[0]+" - wrong");
+            }
+            else{
+                console.log(t[0]+" - true");
+            }
+        }
+    }
+};*/
+// –ü–æ–ª—É—á–∏—Ç—å –Ω–∞–±–æ—Ä —Å–ª–æ–≤ –¥–ª—è —Ç—Ä–µ–Ω–∏—Ä–æ–≤–∫–∏
+/*
 var counter = 0;
 var Generate = new LearnMode();
 
-$('.start-training').on('click', function(){
-    $.get('getWords').done(function(data){
+$('.start-training').on('click', function () {
+    $.get('getWords').done(function (data) {
         Generate.packageWords = JSON.parse(data);
+        console.log(Generate.packageWords);
         Generate.learnWords(Generate.packageWords);
         $('.choose-mode').css('display', 'none');
         $('.learn-words').css('display', 'block');
     });
 });
 
-$('.next-word').on('click', function(){
-    if(Generate.counter < 4){
+$('.next-word').on('click', function () {
+    if (Generate.counter < 4) {
         Generate.counter += 1;
         Generate.learnWords(Generate.packageWords);
     }
-    else{
+    else {
         $('.second_mode').css('display', 'block');
         $('.learn-words').css('display', 'none');
         Generate.counter = 0;
         Generate.chooseRightWord(Generate.packageWords, id=0);
+        liClick();
     }
 });
 $('.next-group-word').on('click', function(){
+    $('.words_list li').attr("class", "list-group-item");
+    liClick();
     if(Generate.state == 0){
         if(Generate.counter < 4){
             Generate.counter += 1;
@@ -3666,8 +3936,85 @@ $('.next-group-word').on('click', function(){
             Generate.chooseRightWord(Generate.packageWords, id=1);
         }
         else{
-            document.location.reload();
+            Generate.result();
+            //document.location.reload();
         }
 
     }
 });
+
+function liClick(){
+    $('.words_list li').on('click', function(){
+        console.log($(this).text());
+        var self = this;
+        if($(self).text() == $('.learn-text').attr('data-translate')){
+            Generate.learningWords.push($(this).text()+'-1');
+            $(self).attr("class", "list-group-item list-group-item-success");
+        }
+        else{
+            Generate.learningWords.push($(this).text()+'-0');
+            $(self).attr("class", "list-group-item list-group-item-danger");
+        }
+        $('.words_list li').off('click');
+    });
+}
+*/
+// ----------------------------------------------
+
+$('.start-training').on('click', function () {
+    'use strict';
+
+    var trainer = new Trainer();
+    trainer.start();
+});
+/**
+ * @constructor
+ */
+var Trainer = function () {
+    'use strict';
+
+    this.answer = [];
+    this.counterWords = 0;
+    this.next = function (oneWordData) {
+        // Test
+        var wordTrain = new TrainWT(oneWordData, this.getOneResult);
+        wordTrain.start();
+        this.counterWords++;
+    };
+
+    this.getOneResult = function (result) {
+        this.currentWord = this.collection[this.idWords[this.counterWords]];
+        this.answer[this.idWords[this.counterWords - 1]] = result;
+        // Change currentWord ...
+        // If its the last word do something else
+        if (this.counterWords == this.idWords.length) {
+            this.saveData();
+        } else {
+            this.next(this.currentWord);
+        }
+    }.bind(this);
+
+    this.saveData = function () {
+        console.log("saveData");
+        // ajax
+    };
+
+    this.getData = function (cb) {
+        var collection;
+        $.get('getWords').done(function (data) {
+            collection = JSON.parse(data);
+            if (typeof cb === 'function') {
+                cb(collection);
+            }
+        });
+    };
+
+    this.start = function () {
+        this.getData(function (collection) {
+            this.collection = collection.words;
+            this.idWords = collection.word_seq;
+            this.currentWord = this.collection[this.idWords[0]];
+            this.next(this.currentWord);
+        }.bind(this));
+    };
+};

@@ -6,8 +6,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
     {% block stylesheets %}
-        {% stylesheets '@TralangBundle/Resources/public/css/*' filter='cssrewrite' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% stylesheets '@TralangBundle/Resources/public/css/*'  filter='cssrewrite' %}
+            <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
     {% endblock %}
 
@@ -37,7 +37,7 @@
     </div>
 </div>
 {% javascripts '@TralangBundle/Resources/public/js/*'
-'@TralangBundle/Resources/public/js/ModeTraining/*'%}
+                '@TralangBundle/Resources/public/js/ModeTraining/*'%}
 <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
 </body>

@@ -11,8 +11,11 @@
     </div>
     <div class="learn-words">
         <div class="learn-words-container">
-            <div class="text"></div>
-            <div class="textTranslate"></div>
+            <div class="error-block">
+                <div class="error-message"></div>
+            </div>
+            <div class="word"></div>
+            <div class="word-translate"></div>
             <div class="btn">
                 <button type="button" class="btn btn-default next-word">Next</button>
             </div>
@@ -24,15 +27,16 @@
             <div class="learn-text" style="background-color: #5bc0de; font-size: 24px"></div>
             <div class="learn-text-translate">
                 <ul class="words_list list-group">
-                    <li class="list-group-item"></li>
-                    <li class="list-group-item"></li>
-                    <li class="list-group-item"></li>
-                    <li class="list-group-item"></li>
-                    <li class="list-group-item"></li>
+                    <button class="btn-default list-btn"><li class="list-group-item"></li></button>
+                    <button class="btn-default list-btn"><li class="list-group-item"></li></button>
+                    <button class="btn-default list-btn"><li class="list-group-item"></li></button>
+                    <button class="btn-default list-btn"><li class="list-group-item"></li></button>
+                    <button class="btn-default list-btn"><li class="list-group-item"></li></button>
                 </ul>
             </div>
             <button type="button" class="btn btn-default next-group-word">Next</button>
         </div>
     </div>
+
 
 {% endblock %}
