@@ -1,10 +1,14 @@
-TrainWT = function (oneWordData, nextWord) {
+/**
+ * Created by Roma on 15.03.2016.
+ */
+
+TrainTW = function (oneWordData, nextWord) {
     'use strict';
 
     TemplateTrains.apply(this, arguments);
 
+    this.oneWordToShow = this.data.textTranslate;
     this.setView = function () {
-        this.sound();
         $('.list-group-item').attr('class', "list-group-item");
         $('.choose-mode').css('display', 'none');
         $('.second_mode').css('display', 'block');
@@ -12,11 +16,12 @@ TrainWT = function (oneWordData, nextWord) {
         this.liText.text(this.oneWordToShow);
         for (i; i < this.data.word_seq.length; i++) {
             word = this.data.mix_words[this.data.word_seq[i]];
-            $(this.li[i]).text(word.textTranslate).attr('data-translate', word.text);
+            $(this.li[i]).text(word.text).attr('data-translate', word.textTranslate);
         }
     };
 };
-/*var TrainWT = function (oneWordData, onEndTest) {
+/*
+var TrainTW = function (oneWordData, onEndTest) {
     'use strict';
 
     this.data = oneWordData;
@@ -26,7 +31,7 @@ TrainWT = function (oneWordData, nextWord) {
     this.buttonList = $('.list-group-item');
     this.buttonNext = $('.next-group-word');
     this.answer = null;
-    this.oneWordToShow = this.data.text;
+    this.oneWordToShow = this.data.textTranslate;
     var self = this;
 
     this.start = function () {
@@ -66,7 +71,7 @@ TrainWT = function (oneWordData, nextWord) {
         this.liText.text(this.oneWordToShow);
         for (i; i < this.data.word_seq.length; i++) {
             word = this.data.mix_words[this.data.word_seq[i]];
-            $(this.li[i]).text(word.textTranslate).attr('data-translate', word.text);
+            $(this.li[i]).text(word.text).attr('data-translate', word.textTranslate);
         }
     }.bind(this);
 

@@ -3728,40 +3728,10 @@ function initPage() {
 $(document).ready(initPage());
 
 
-var TrainLW = function (oneWordData, nextWord) {
-    'use strict';
-
-    this.data = oneWordData;
-    this.getNextWord = nextWord;
-    this.word = $('.word');
-    this.translateWord = $('.word-translate');
-    this.buttonNext = $('.next-word');
-
-    this.start = function () {
-        this.setView();
-        this.buttonNext.on('click', this.nextWord);
-    };
-
-    this.nextWord = function () {
-        if (typeof this.getNextWord === 'function') {
-            this.getNextWord();
-        }
-    };
-
-    this.setView = function () {
-        this.sound();
-        $('.choose-mode').css('display', 'none');
-        $('.learn-words').css('display', 'block');
-        this.word.text(this.data.text);
-        this.translateWord.text(this.oneWordToShow.textTranslate);
-    }.bind(this);
-
-    this.sound = function () {
-        var url = "https://tts.voicetech.yandex.net/tts?text=" + this.oneWordToShow + "&lang=en_GB&format=wav&quality=lo&platform=web&application=translate";
-        $('audio').attr('src', url).get(0).play();
-    };
-};
-var TrainWT = function (oneWordData, onEndTest) {
+/**
+ * Created by Roma on 15.03.2016.
+ */
+var TemplateTrains = function (oneWordData, onEndTest) {
     'use strict';
 
     this.data = oneWordData;
@@ -3777,6 +3747,225 @@ var TrainWT = function (oneWordData, onEndTest) {
     /**
      *
      */
+    this.start = function () {
+        this.setView();
+        this.buttonNext.off('click');
+        this.buttonList.on('click', this.onAnswer);
+        this.buttonNext.on('click', this.onEnd);
+    };
+
+    this.onAnswer = function () {
+        if (self.oneWordToShow == $(this).attr('data-translate')) {
+            self.answer = true;
+            $(this).attr('class', "list-group-item list-group-item-success");
+        } else {
+            self.answer = false;
+            $(this).attr('class', "list-group-item list-group-item-danger");
+        }
+        self.buttonList.off('click');
+        // ... if true or wrong answer
+    };
+
+    this.onEnd = function () {
+        // Get answer result is true or false
+        if (typeof this.onEndTest === 'function') {
+            this.onEndTest(this.answer);
+        } else {
+            throw new Error('On end handler is not a function');
+        }
+    }.bind(this);
+
+    this.setView = function () {
+        console.log("AAAAAAAAAAa");
+        this.sound();
+        $('.list-group-item').attr('class', "list-group-item");
+        $('.choose-mode').css('display', 'none');
+        $('.second_mode').css('display', 'block');
+        var i = 0, word = "";
+        this.liText.text(this.oneWordToShow);
+        for (i; i < this.data.word_seq.length; i++) {
+            word = this.data.mix_words[this.data.word_seq[i]];
+            $(this.li[i]).text(word.textTranslate).attr('data-translate', word.text);
+        }
+    }.bind(this);
+
+    this.sound = function () {
+        var url = "https://tts.voicetech.yandex.net/tts?text=" + this.oneWordToShow + "&lang=en_GB&format=wav&quality=lo&platform=web&application=translate";
+        $('audio').attr('src', url).get(0).play();
+    };
+};
+
+
+TrainLW = function (oneWordData, nextWord) {
+    'use strict';
+
+    TemplateTrains.apply(this, arguments);
+
+    this.word = $('.word');
+    this.translateWord = $('.word-translate');
+    this.buttonNext = $('.next-word');
+    this.oneWordToShow = this.data.text;
+
+    this.setView = function () {
+        this.sound();
+        $('.choose-mode').css('display', 'none');
+        $('.learn-words').css('display', 'block');
+        this.word.text(this.data.text);
+        this.translateWord.text(this.data.textTranslate);
+    };
+};
+
+
+
+
+/*var TrainLW = function (oneWordData, nextWord) {
+    'use strict';
+
+    this.data = oneWordData;
+    this.getNextWord = nextWord;
+    this.word = $('.word');
+    this.translateWord = $('.word-translate');
+    this.buttonNext = $('.next-word');
+
+    this.start = function () {
+        this.setView();
+        this.buttonNext.off('click');
+        this.buttonNext.on('click', this.nextWord);
+    };
+
+    this.nextWord = function () {
+        if (typeof this.getNextWord === 'function') {
+            this.getNextWord();
+        }
+    }.bind(this);
+
+    this.setView = function () {
+        this.sound();
+        $('.choose-mode').css('display', 'none');
+        $('.learn-words').css('display', 'block');
+        this.word.text(this.data.text);
+        this.translateWord.text(this.data.textTranslate);
+    }.bind(this);
+
+    this.sound = function () {
+        var url = "https://tts.voicetech.yandex.net/tts?text=" + this.oneWordToShow + "&lang=en_GB&format=wav&quality=lo&platform=web&application=translate";
+        $('audio').attr('src', url).get(0).play();
+    };
+};*/
+/**
+ * Created by Roma on 15.03.2016.
+ */
+
+TrainTW = function (oneWordData, nextWord) {
+    'use strict';
+
+    TemplateTrains.apply(this, arguments);
+
+    this.oneWordToShow = this.data.textTranslate;
+    this.setView = function () {
+        $('.list-group-item').attr('class', "list-group-item");
+        $('.choose-mode').css('display', 'none');
+        $('.second_mode').css('display', 'block');
+        var i = 0, word = "";
+        this.liText.text(this.oneWordToShow);
+        for (i; i < this.data.word_seq.length; i++) {
+            word = this.data.mix_words[this.data.word_seq[i]];
+            $(this.li[i]).text(word.text).attr('data-translate', word.textTranslate);
+        }
+    };
+};
+/*
+var TrainTW = function (oneWordData, onEndTest) {
+    'use strict';
+
+    this.data = oneWordData;
+    this.onEndTest = onEndTest;
+    this.li = $('.words_list li');
+    this.liText = $('.learn-text');
+    this.buttonList = $('.list-group-item');
+    this.buttonNext = $('.next-group-word');
+    this.answer = null;
+    this.oneWordToShow = this.data.textTranslate;
+    var self = this;
+
+    this.start = function () {
+        this.setView();
+        this.buttonNext.off('click');
+        this.buttonList.on('click', this.onAnswer);
+        this.buttonNext.on('click', this.onEnd);
+    };
+
+    this.onAnswer = function () {
+        if (self.oneWordToShow == $(this).attr('data-translate')) {
+            self.answer = true;
+            $(this).attr('class', "list-group-item list-group-item-success");
+        } else {
+            self.answer = false;
+            $(this).attr('class', "list-group-item list-group-item-danger");
+        }
+        self.buttonList.off('click');
+        // ... if true or wrong answer
+    };
+
+    this.onEnd = function () {
+        // Get answer result is true or false
+        if (typeof this.onEndTest === 'function') {
+            this.onEndTest(this.answer);
+        } else {
+            throw new Error('On end handler is not a function');
+        }
+    }.bind(this);
+
+    this.setView = function () {
+        this.sound();
+        $('.list-group-item').attr('class', "list-group-item");
+        $('.choose-mode').css('display', 'none');
+        $('.second_mode').css('display', 'block');
+        var i = 0, word = "";
+        this.liText.text(this.oneWordToShow);
+        for (i; i < this.data.word_seq.length; i++) {
+            word = this.data.mix_words[this.data.word_seq[i]];
+            $(this.li[i]).text(word.text).attr('data-translate', word.textTranslate);
+        }
+    }.bind(this);
+
+    this.sound = function () {
+        var url = "https://tts.voicetech.yandex.net/tts?text=" + this.oneWordToShow + "&lang=en_GB&format=wav&quality=lo&platform=web&application=translate";
+        $('audio').attr('src', url).get(0).play();
+    };
+};*/
+
+TrainWT = function (oneWordData, nextWord) {
+    'use strict';
+
+    TemplateTrains.apply(this, arguments);
+
+    this.setView = function () {
+        this.sound();
+        $('.list-group-item').attr('class', "list-group-item");
+        $('.choose-mode').css('display', 'none');
+        $('.second_mode').css('display', 'block');
+        var i = 0, word = "";
+        this.liText.text(this.oneWordToShow);
+        for (i; i < this.data.word_seq.length; i++) {
+            word = this.data.mix_words[this.data.word_seq[i]];
+            $(this.li[i]).text(word.textTranslate).attr('data-translate', word.text);
+        }
+    };
+};
+/*var TrainWT = function (oneWordData, onEndTest) {
+    'use strict';
+
+    this.data = oneWordData;
+    this.onEndTest = onEndTest;
+    this.li = $('.words_list li');
+    this.liText = $('.learn-text');
+    this.buttonList = $('.list-group-item');
+    this.buttonNext = $('.next-group-word');
+    this.answer = null;
+    this.oneWordToShow = this.data.text;
+    var self = this;
+
     this.start = function () {
         this.setView();
         this.buttonNext.off('click');
@@ -3822,7 +4011,7 @@ var TrainWT = function (oneWordData, onEndTest) {
         var url = "https://tts.voicetech.yandex.net/tts?text=" + this.oneWordToShow + "&lang=en_GB&format=wav&quality=lo&platform=web&application=translate";
         $('audio').attr('src', url).get(0).play();
     };
-};
+};*/
 /*LearnMode = function () {
     var self = this;
     this.packageWords = [];
@@ -3961,23 +4150,40 @@ function liClick(){
 */
 // ----------------------------------------------
 
-$('.start-training').on('click', function () {
+$('.start-TW').on('click', function () {
     'use strict';
 
-    var trainer = new Trainer();
+    var idModeTraine = $(this).attr('data-mode-train');
+    var trainer = new Trainer(idModeTraine);
+    trainer.start();
+});
+
+$('.start-LW').on('click', function () {
+    'use strict';
+
+    var idModeTraine = $(this).attr('data-mode-train');
+    var trainer = new Trainer(idModeTraine);
+    trainer.start();
+});
+$('.start-WT').on('click', function () {
+    'use strict';
+
+    var idModeTraine = $(this).attr('data-mode-train');
+    var trainer = new Trainer(idModeTraine);
     trainer.start();
 });
 /**
  * @constructor
  */
-var Trainer = function () {
+var Trainer = function (mode) {
     'use strict';
 
     this.answer = [];
     this.counterWords = 0;
+    this.modeTraining = EnumModeTraining.create(mode);
     this.next = function (oneWordData) {
         // Test
-        var wordTrain = new TrainWT(oneWordData, this.getOneResult);
+        var wordTrain = new this.modeTraining(oneWordData, this.getOneResult);
         wordTrain.start();
         this.counterWords++;
     };
@@ -4018,3 +4224,18 @@ var Trainer = function () {
         }.bind(this));
     };
 };
+
+var EnumModeTraining = ABone.create(function () {
+    'use strict';
+
+    this.constructor.TRAIN_WT = 1;
+    this.constructor.TRAIN_TW = 2;
+    this.constructor.TRAIN_LW = 3;
+    this.constructor.create = function (val) {
+        var classes = {};
+        classes[this.TRAIN_WT] = TrainWT;
+        classes[this.TRAIN_TW] = TrainTW;
+        classes[this.TRAIN_LW] = TrainLW;
+        return classes[val];
+    };
+});
