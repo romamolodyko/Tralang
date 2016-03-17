@@ -3730,6 +3730,40 @@ function initPage() {
 $(document).ready(initPage());
 
 
+var ShowResult = function () {
+
+    this.start = function (answer) {
+        this.wrongBlock = $('.list-wrong-words');
+        this.counter = 0;
+        this.answer = answer;
+        this.showResult();
+    };
+
+    this.showResult = function () {
+        for (var id in this.answer) {
+            var word = (this.answer[id]).split("/");
+            if (word[1] === "false") {
+                var w = "<li class='list-group-item'>" + word[0] + " - " + word[1] + "</li>";
+                this.wrongBlock.append(w);
+                this.counter++;
+            }
+        }
+        this.show();
+    };
+
+    this.show = function () {
+        $('.second_mode').css('display', 'none');
+        $('.learn-words-container').css('display', 'none');
+        if (this.counter == 0) {
+            $('.block-success').css('display', 'block');
+        } else {
+            $('.block-wrong').css('display', 'block');
+        }
+    }
+};
+
+
+
 /**
  * Created by Roma on 15.03.2016.
  */
@@ -3747,7 +3781,7 @@ var TemplateTrains = function (oneWordData, onEndTest) {
     var self = this;
 
     /**
-     *
+     * Start training. Show one true and four wrong words and wait until choose right word.
      */
     this.start = function () {
         this.setView();
@@ -3756,6 +3790,9 @@ var TemplateTrains = function (oneWordData, onEndTest) {
         this.buttonNext.on('click', this.onEnd);
     };
 
+    /**
+     * Get answer result is true or false
+     */
     this.onAnswer = function () {
         var wt = self.data.text + " - " + self.data.textTranslate + "/";
         if (self.oneWordToShow == $(this).attr('data-translate')) {
@@ -3766,11 +3803,13 @@ var TemplateTrains = function (oneWordData, onEndTest) {
             $(this).attr('class', "list-group-item list-group-item-danger");
         }
         self.buttonList.off('click');
-        // ... if true or wrong answer
     };
 
+    /**
+     * On end test, call callback function and pass answers
+     */
     this.onEnd = function () {
-        // Get answer result is true or false
+        //
         if (typeof this.onEndTest === 'function') {
             this.onEndTest(this.answer);
         } else {
@@ -3778,6 +3817,9 @@ var TemplateTrains = function (oneWordData, onEndTest) {
         }
     }.bind(this);
 
+    /**
+     * Play word
+     */
     this.sound = function () {
         var url = "https://tts.voicetech.yandex.net/tts?text=" + this.oneWordToShow + "&lang=en_GB&format=wav&quality=lo&platform=web&application=translate";
         $('audio').attr('src', url).get(0).play();
@@ -3796,6 +3838,9 @@ TrainLW = function (oneWordData, nextWord) {
     this.oneWordToShow = this.data.text;
     this.answer = null;
 
+    /**
+     * Show word and translate
+     */
     this.setView = function () {
         this.sound();
         this.answer = this.data.text + "/" + true;
@@ -3812,6 +3857,10 @@ TrainTW = function (oneWordData, nextWord) {
     TemplateTrains.apply(this, arguments);
 
     this.oneWordToShow = this.data.textTranslate;
+
+    /**
+     * Show one true and four wrong words
+     */
     this.setView = function () {
         $('.list-group-item').attr('class', "list-group-item");
         $('.choose-mode').css('display', 'none');
@@ -3831,6 +3880,9 @@ TrainWT = function (oneWordData, nextWord) {
 
     TemplateTrains.apply(this, arguments);
 
+    /**
+     * Show one true and four wrong words
+     */
     this.setView = function () {
         this.sound();
         $('.list-group-item').attr('class', "list-group-item");
@@ -3845,71 +3897,79 @@ TrainWT = function (oneWordData, nextWord) {
     };
 };
 
-/*LearnMode = function () {
-    var self = this;
-    this.packageWords = [];
-    this.counter = 0;
-    this.state = 0;
-    this.learningWords = [];
+/**
+ * Created by Roma on 18.03.2016.
+ */
+var Trainer = function (mode) {
+    'use strict';
 
-    this.learnWords = function (objectWord) {
-        try {
-            var word = objectWord.words[objectWord.word_seq[this.counter]];
-            $('.text').text(word.text);
-            $('.textTranslate').text(word.textTranslate);
-            this.playWord(word.text);
-        } catch (err) {
-            $('.error-message').text('Before learn words you need add it!');
-            $('.error-block').css('display', 'block');
-            $('.next-word').css('display', 'none');
-        }
-        //var word = objectWord.words[objectWord.word_seq[this.counter]];
-        //$('.text').text(word.text);
-        //$('.textTranslate').text(word.textTranslate);
-        //this.playWord(word.text);
-    }
+    this.answer = {};
+    this.counterWords = 0;
+    this.modeTraining = EnumModeTraining.create(mode);
+    this.showResult = false;
 
-    this.chooseRightWord = function (objectWord, idW) {
-        var li = $('.words_list li'), mixWords = [], wordSeq = [], word = [];
-        var t = objectWord.words[objectWord.word_seq[this.counter]];
-        mixWords = t.mix_words;
-        for (id in mixWords){
-            wordSeq.push(id);
-        }
-        for(var i = 0; i<wordSeq.length; i++){
-            word.push(mixWords[wordSeq[i]].text+"-"+mixWords[wordSeq[i]].textTranslate);
-        }
-        word.push(t.text+"-"+ t.textTranslate);
-        shuffle(word);
-        if(idW == 0){
-            $('.learn-text').text(t.textTranslate).attr('data-translate', t.text);
-        }
-        else{
-            $('.learn-text').text(t.text).attr('data-translate', t.textTranslate);
-        }
-        for(var j = 0; word.length > j; j++){
-            var words = word[j].split('-');
-            $(li[j]).text(words[idW]);
-        }
+    /**
+     *@param oneWordData
+     * This method is getting object and is creating some mode training
+     */
+    this.next = function (oneWordData) {
+        var wordTrain = new this.modeTraining(oneWordData, this.getOneResult);
+        wordTrain.start();
+        this.counterWords++;
     };
 
-    this.playWord = function(word){
-        var url = "https://tts.voicetech.yandex.net/tts?text="+word+"&lang=en_GB&format=wav&quality=lo&platform=web&application=translate";
-        $('audio').attr('src', url).get(0).play();
+    /**
+     * @type {function(this:Trainer)}
+     * Getting and save answer result, if this last words then save result, otherwise set next word
+     */
+    this.getOneResult = function (result) {
+        this.currentWord = this.collection[this.idWords[this.counterWords]];
+        this.answer[this.idWords[this.counterWords - 1]] = result;
+        if (this.counterWords == this.idWords.length) {
+            this.saveData();
+        } else {
+            this.next(this.currentWord);
+        }
+    }.bind(this);
+
+    /**
+     * Save results of training to database
+     */
+    this.saveData = function () {
+        var s = new ShowResult();
+        s.start(this.answer);
+        $.get('setState', {
+            wordsAnswers : this.answer
+        }).done(function (data) {
+
+        });
     };
 
-    this.result = function(){
-        for(var i = 0; i < this.learningWords.length; i++){
-            t = this.learningWords[i].split('-');
-            if (t[1] == 0){
-                console.log(t[0]+" - wrong");
+    /**
+     * Get collection words from database
+     */
+    this.getData = function (cb) {
+        var collection;
+        $.get('getWords').done(function (data) {
+            collection = JSON.parse(data);
+            if (typeof cb === 'function') {
+                cb(collection);
             }
-            else{
-                console.log(t[0]+" - true");
-            }
-        }
-    }
-};*/
+        });
+    };
+
+    /**
+     * Save words in variable this.collection and set first word
+     */
+    this.start = function () {
+        this.getData(function (collection) {
+            this.collection = collection.words;
+            this.idWords = collection.word_seq;
+            this.currentWord = this.collection[this.idWords[0]];
+            this.next(this.currentWord);
+        }.bind(this));
+    };
+};
 $('.start-TW').on('click', function () {
     'use strict';
 
@@ -3932,85 +3992,6 @@ $('.start-WT').on('click', function () {
     var trainer = new Trainer(idModeTraine);
     trainer.start();
 });
-/**
- * @constructor
- */
-var Trainer = function (mode) {
-    'use strict';
-
-    this.answer = {};
-    this.counterWords = 0;
-    this.modeTraining = EnumModeTraining.create(mode);
-    this.rightBlock = $('.list-right-words');
-    this.wrongBlock = $('.list-wrong-words');
-    this.counter = 0;
-    this.next = function (oneWordData) {
-        var wordTrain = new this.modeTraining(oneWordData, this.getOneResult);
-        wordTrain.start();
-        this.counterWords++;
-    };
-
-    this.getOneResult = function (result) {
-        this.currentWord = this.collection[this.idWords[this.counterWords]];
-        this.answer[this.idWords[this.counterWords - 1]] = result;
-        if (this.counterWords == this.idWords.length) {
-            this.saveData();
-        } else {
-            this.next(this.currentWord);
-        }
-    }.bind(this);
-
-    this.saveData = function () {
-        console.log(this.answer);
-        this.showResult();
-        $.get('setState', {
-            wordsAnswers : this.answer
-        }).done(function (data) {
-
-        });
-    };
-
-    this.getData = function (cb) {
-        var collection;
-        $.get('getWords').done(function (data) {
-            collection = JSON.parse(data);
-            if (typeof cb === 'function') {
-                cb(collection);
-            }
-        });
-    };
-
-    this.start = function () {
-        this.getData(function (collection) {
-            this.collection = collection.words;
-            this.idWords = collection.word_seq;
-            this.currentWord = this.collection[this.idWords[0]];
-            this.next(this.currentWord);
-        }.bind(this));
-    };
-
-    this.showResult = function () {
-        for (var id in this.answer) {
-            var word = (this.answer[id]).split("/");
-            if (word[1] === "false"){
-                var w = "<li class='list-group-item'>"+word[0] + " - " + word[1]+"</li>";
-                this.wrongBlock.append(w);
-                this.counter++;
-            }
-        }
-        this.show();
-    };
-
-    this.show = function () {
-        $('.second_mode').css('display', 'none');
-        $('.learn-words-container').css('display', 'none');
-        if (this.counter == 0){
-            $('.block-success').css('display', 'block');
-        } else {
-            $('.block-wrong').css('display', 'block');
-        }
-    }
-};
 
 var EnumModeTraining = ABone.create(function () {
     'use strict';

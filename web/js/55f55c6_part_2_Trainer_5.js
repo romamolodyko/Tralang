@@ -1,27 +1,5 @@
-$('.start-TW').on('click', function () {
-    'use strict';
-
-    var idModeTraine = $(this).attr('data-mode-train');
-    var trainer = new Trainer(idModeTraine);
-    trainer.start();
-});
-
-$('.start-LW').on('click', function () {
-    'use strict';
-
-    var idModeTraine = $(this).attr('data-mode-train');
-    var trainer = new Trainer(idModeTraine);
-    trainer.start();
-});
-$('.start-WT').on('click', function () {
-    'use strict';
-
-    var idModeTraine = $(this).attr('data-mode-train');
-    var trainer = new Trainer(idModeTraine);
-    trainer.start();
-});
 /**
- * @constructor
+ * Created by Roma on 18.03.2016.
  */
 var Trainer = function (mode) {
     'use strict';
@@ -31,12 +9,21 @@ var Trainer = function (mode) {
     this.modeTraining = EnumModeTraining.create(mode);
     this.wrongBlock = $('.list-wrong-words');
     this.counter = 0;
+
+    /**
+     *@param oneWordData
+     * This method is getting object and is creating some mode training
+     */
     this.next = function (oneWordData) {
         var wordTrain = new this.modeTraining(oneWordData, this.getOneResult);
         wordTrain.start();
         this.counterWords++;
     };
 
+    /**
+     * @type {function(this:Trainer)}
+     * Getting and save answer result, if this last words then save result, otherwise set next word
+     */
     this.getOneResult = function (result) {
         this.currentWord = this.collection[this.idWords[this.counterWords]];
         this.answer[this.idWords[this.counterWords - 1]] = result;
@@ -47,6 +34,9 @@ var Trainer = function (mode) {
         }
     }.bind(this);
 
+    /**
+     * Save results of training to database
+     */
     this.saveData = function () {
         console.log(this.answer);
         this.showResult();
@@ -57,6 +47,9 @@ var Trainer = function (mode) {
         });
     };
 
+    /**
+     * Get collection words from database
+     */
     this.getData = function (cb) {
         var collection;
         $.get('getWords').done(function (data) {
@@ -67,6 +60,9 @@ var Trainer = function (mode) {
         });
     };
 
+    /**
+     * Save words on variable and set first words
+     */
     this.start = function () {
         this.getData(function (collection) {
             this.collection = collection.words;
@@ -98,18 +94,3 @@ var Trainer = function (mode) {
         }
     }
 };
-
-var EnumModeTraining = ABone.create(function () {
-    'use strict';
-
-    this.constructor.TRAIN_WT = 1;
-    this.constructor.TRAIN_TW = 2;
-    this.constructor.TRAIN_LW = 3;
-    this.constructor.create = function (val) {
-        var classes = {};
-        classes[this.TRAIN_WT] = TrainWT;
-        classes[this.TRAIN_TW] = TrainTW;
-        classes[this.TRAIN_LW] = TrainLW;
-        return classes[val];
-    };
-});
