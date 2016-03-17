@@ -58,5 +58,13 @@
 
             return new Response(json_encode($w, JSON_UNESCAPED_UNICODE));
         }
+        /**
+         * @Route("/training/setState", name = "setState")
+         */
+        public function setStateWords (Request $request) {
+            $answers = $request->get('wordsAnswers');
+            print_r($answers);
 
+            return new Response("asdsa");
+        }
     }

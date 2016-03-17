@@ -26,6 +26,19 @@ class Binding
      * @ORM\Column(type="integer", length=255)
      */
     private $id_word;
+    /**
+     * @ORM\Column(type="integer", length=255)
+     */
+    private $TWState;
+
+    /**
+     * @ORM\Column(type="integer", length=255)
+     */
+    private $WTState;
+    /**
+     * @ORM\Column(type="integer", length=255)
+     */
+    private $LWState;
 
     public function setId($id){
         $this->id = $id;
@@ -38,6 +51,18 @@ class Binding
 
     public function setIdWords($idWords){
         $this->id_word = $idWords;
+    }
+
+    public function setTWStateWord($state){
+        $this->TWState = $state;
+    }
+
+    public function setWTStateWord($state){
+        $this->WTState = $state;
+    }
+
+    public function setLWState($state){
+        $this->LWState = $state;
     }
 
     /**
@@ -64,27 +89,15 @@ class Binding
         return $this->id_word;
     }
 
-    /**
-     * Set idWord
-     *
-     * @param integer $idWord
-     *
-     * @return Binding
-     */
-    public function setIdWord($idWord)
-    {
-        $this->id_word = $idWord;
-
-        return $this;
+    public function getTWStateWord(){
+        return $this->TWState;
     }
 
-    /**
-     * Get idWord
-     *
-     * @return integer
-     */
-    public function getIdWord()
-    {
-        return $this->id_word;
+    public function getWTStateWord(){
+        return $this->WTState;
+    }
+
+    public function getLWState(){
+        return $this->LWState;
     }
 }

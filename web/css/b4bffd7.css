@@ -6798,7 +6798,7 @@ button.close {
 .container{
     width: 1000px;
     margin: auto;
-    margin-top: 79px;
+    margin-top: 60px;
 }
 
 .img{
@@ -6884,7 +6884,7 @@ button.close {
     font-family: cursive;
 }
 
-.second-mode-container{
+.second-mode-container, .block-wrong, .block-success{
     width: 600px;
     margin: auto;
     border: solid 1px #FFFAF6;
@@ -6902,4 +6902,16 @@ button.close {
     border: none;
     margin: 0px;
     padding: 0px;
+}
+.main-img{
+    width: 970px;
+    height: 619px;
+}
+
+.block-success{
+    display: none;
+}
+
+.block-wrong{
+    display: none;
 }

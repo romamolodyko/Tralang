@@ -32,6 +32,8 @@ function initPage() {
             }
             $(".send").css("display", "none");
             $('.word').val("");
+            onClickDelete();
+            onClickPlay();
         });
     });
 

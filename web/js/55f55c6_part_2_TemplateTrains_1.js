@@ -25,11 +25,12 @@ var TemplateTrains = function (oneWordData, onEndTest) {
     };
 
     this.onAnswer = function () {
+        var wt = self.data.text + " - " + self.data.textTranslate + "/";
         if (self.oneWordToShow == $(this).attr('data-translate')) {
-            self.answer = true;
+            self.answer = wt + true;
             $(this).attr('class', "list-group-item list-group-item-success");
         } else {
-            self.answer = false;
+            self.answer = wt + false;
             $(this).attr('class', "list-group-item list-group-item-danger");
         }
         self.buttonList.off('click');
@@ -42,20 +43,6 @@ var TemplateTrains = function (oneWordData, onEndTest) {
             this.onEndTest(this.answer);
         } else {
             throw new Error('On end handler is not a function');
-        }
-    }.bind(this);
-
-    this.setView = function () {
-        console.log("AAAAAAAAAAa");
-        this.sound();
-        $('.list-group-item').attr('class', "list-group-item");
-        $('.choose-mode').css('display', 'none');
-        $('.second_mode').css('display', 'block');
-        var i = 0, word = "";
-        this.liText.text(this.oneWordToShow);
-        for (i; i < this.data.word_seq.length; i++) {
-            word = this.data.mix_words[this.data.word_seq[i]];
-            $(this.li[i]).text(word.textTranslate).attr('data-translate', word.text);
         }
     }.bind(this);
 
