@@ -2,7 +2,7 @@
  * Created by Roma on 24.02.2016.
  */
 
-    $('.content').on('click', function(){
+   /* $('.content').on('click', function(){
         $('.sign-up').css("display", "none");
         $('.sign-in').css("display", "none");
     });
@@ -42,11 +42,10 @@
 
             }
         });
-    });
+    });*/
 
 /*--------------------------------------------------------------*/
-
-$('.sign-in-click').on('click', function () {
+/*$('.sign-in-click').on('click', function () {
     $('.sign-up').css("display", "none");
     $('.sign-in').css("display", "block");
     $('.check-login').on('click', function () {
@@ -79,5 +78,23 @@ $('.sign-in-click').on('click', function () {
     });
     checkInput("field-email-log");
     checkInput("field-password-log");
-});
 
+});*/
+//___________________________________________________________________________-'
+$('.sign-up-click').on('click', function () {
+    $('.sign-up').css("display", "block");
+    $('.check-sign-up').on('click', function () {
+        var msg   = $('#form-sign-up').serialize();
+        $.ajax({
+            type: 'POST',
+            url: 'register',
+            data: msg,
+            success: function(data) {
+                console.log(JSON.parse(data));
+            },
+            error:  function(xhr, str){
+                alert('Возникла ошибка: ' + xhr.responseCode);
+            }
+        });
+    });
+})

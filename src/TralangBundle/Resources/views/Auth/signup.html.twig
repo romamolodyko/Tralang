@@ -1,24 +1,90 @@
-{% extends "TralangBundle:MainView:home.html.twig" %}
 
-{% block body %}
-    <div class="panel panel-default" style="width: 300px; margin: auto;">
-    	<div class="panel-body">
-    	   <form action="" method="post" role="form">
-    	   	    <legend>Sign Up</legend>
-                <div class="form-group">
-                    <label for="">Name</label>
-                    <input type="text" class="form-control" name="name" id="field-name" placeholder="Input name">
-                </div>
-               <div class="form-group">
-                   <label for="">Email</label>
-                   <input type="email" class="form-control" name="email" id="field-email" placeholder="Input email">
-               </div>
-               <div class="form-group">
-                   <label for="">Password</label>
-                   <input type="password" class="form-control" name="password" id="field-password" placeholder="Input password">
-               </div>
-               <button type="submit" class="btn btn-primary sign-up">Sign Up</button>
-    	   </form>
-    	</div>
-    </div>
+
+{% block log %}
+    {% set error = form_errors(form.email) %}
+    {% set name = 'email' %}
+
+    {{ (error ~ name)|lower }}
+
+
+    {# <form method="post" id="form-sign-up" role="form" name="user" >
+       <div class="form-group">
+           {{ form_row(form.username, {'attr': {'class': 'form-control', 'placeholder':'User Name'}}) }}<br>
+       </div>
+       <div class="form-group">
+           {{ form_row(form.email)}}
+       </div>
+       <div class="form-group">
+           {{ form_row(form.plainPassword.first, {'attr': {'class': 'form-control', 'placeholder':'Password'}}) }}
+       </div>
+       <div class="form-group">
+           {{ form_row(form.plainPassword.second, {'attr': {'class': 'form-control', 'placeholder':'Password'}}) }}
+       </div>
+       <button type="submit" class="check-sign-up btn btn-primary pull-left">Sign Up</button>
+   </form>
+{#<form class="form-signin" name='user' id='register_form' method='post'>
+   {{ form_row(form.username, {'attr': {'class': 'form-control', 'placeholder':'User Name'}}) }}<br>
+
+   {{ formow(form.email)}}
+
+   {{ form_row(form.plainPassword.first, {'attr': {'class': 'form-control', 'placeholder':'Password'}}) }}
+   {{ form_row(form.plainPassword.second, {'attr': {'class': 'form-control', 'placeholder':'Password'}}) }}
+
+   <div class="checkbox">
+       <label>
+           <input type="checkbox" value="remember-me" required checked>Disclaimer
+       </label>
+   </div>
+   <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+</form>
+{{ form_start(form) }}
+{{ form_row(form.username) }}
+{{ form_row(form.email) }}
+{{ form_row(form.plainPassword.first) }}
+{{ form_row(form.plainPassword.second) }}
+
+<button type="submit">Register!</button>
+{{ form_end(form) }}
+#}
+   {# <div class="sign-up">
+
+        <form name="user" method="post">
+        <div>
+            <label for="user_username" class="required">Username</label>
+            <input type="text" id="user_username" name="user[username]" required="required" />
+        </div>
+        <div>
+            <label for="user_email" class="required">Email</label>
+            <input type="email" id="user_email" name="user[email]" required="required" />
+        </div>
+        <div>
+            <label for="user_plainPassword_first" class="required">Password</label>
+            <input type="password" id="user_plainPassword_first" name="user[plainPassword][first]" required="required" />
+        </div>
+        <div>
+            <label for="user_plainPassword_second" class="required">Repeat Password</label>
+            <input type="password" id="user_plainPassword_second" name="user[plainPassword][second]" required="required" />
+        </div>
+
+        <button type="submit">Register!</button>
+        <input type="hidden" id="user__token" name="user[_token]" value="LKk9WDQ5q6XJGq48eXG-UzXhhM7IP0SodKsTh4mLkEI" /></form>
+
+
+        <form class="form-signin" name='user' id='register_form' method='post' action='{{path('create')}}'>
+            {{ form_widget(form.username, {'attr': {'class': 'form-control', 'placeholder':'User Name'}}) }}<br>
+
+            {{ form_widget(form.password, {'attr': {'class': 'form-control', 'placeholder':'Password'}}) }}
+
+            {{ form_widget(form.confirm, {'attr': {'class': 'form-control', 'placeholder':'Confirm Password'}}) }}
+
+            {{ form_widget(form.email, {'attr': {'value': email}}) }}
+
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="remember-me" required checked>Disclaimer
+                </label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+        </form>
+    </div>#}
 {% endblock %}

@@ -2,28 +2,28 @@
 
 {% block login %}
 
-    <div class="panel panel-default" style="width: 300px;margin: auto;">
-          <div class="panel-heading">
+    <div class="sign-in">
+        <div class="panel panel-default" style="width: 300px;margin: auto;">
+            <div class="panel-heading">
                 <h3 class="panel-title">Sign in</h3>
-          </div>
-          <div class="panel-body">
-              <form action="" method="post" role="form">
-                  <div class="form-group">
-                      <label for="field-email">Email</label>
-                      <input type="text" class="form-control" name="email" id="field-email" placeholder="Your Email...">
-                  </div>
-                  <div class="form-group">
-                      <label for="field-password">Password</label>
-                      <input type="password" class="form-control" name="password" id="field-password" placeholder="Your password...">
-                  </div>
-                  <button type="submit" class="btn btn-primary pull-left">Login</button>
-
-
-              </form>
-          </div>
-    </div>
-    <div class="alert alert-warning" style="width: 300px;margin: auto;">
-    	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    	<strong>{{ error|default("Input you email and password!") }}</strong>
+            </div>
+            <div class="panel-body">
+                <form action="{{ path('security_login_check') }}" id="form-login" method="post" role="form" onsubmit="return false">
+                    <div class="form-group">
+                        <label for="username">Email</label>
+                        <input type="text" id="username" name="_username" class="form-control" placeholder="Your Email...">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="_password" class="form-control" placeholder="Your password...">
+                    </div>
+                    <button type="submit" class="check-login btn btn-primary pull-left">Login</button>
+                </form>
+            </div>
+        </div>
+        <div class="alert alert-warning warning-login" style="width: 300px;margin: auto;">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong></strong>
+        </div>
     </div>
 {% endblock %}

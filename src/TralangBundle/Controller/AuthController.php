@@ -2,17 +2,25 @@
 
 namespace TralangBundle\Controller;
 
+use Doctrine\DBAL\Types\TextType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Test\FormBuilderInterface;
+use Symfony\Component\Form\Tests\Extension\Core\Type\RepeatedTypeTest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use TralangBundle\Entity\User;
 use TralangBundle\Entity\Users;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use TralangBundle\Entity\UserType;
 
 class AuthController extends Controller
 {
     /**
-     * @Route("/login", name="login")
+     * @Route("/login1", name="login")
      */
     public function authAction(Request $request)
     {
@@ -130,4 +138,37 @@ class AuthController extends Controller
         }
         else return false;
     }
+
+
+    /**
+     * @param Request $req
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route("\create", name="create")
+     */
+    public function createAction(Request $req)
+    {
+        $em   = $this->getDoctrine()->getManager();
+        $form = $this->createForm(new \TralangBundle\Type\RegistrationType(), new User());
+        $form->handleRequest($req);
+
+        $user= new User();
+        $user= $form->getData();
+
+        $user->setCreated(new \DateTime());
+        $user->setRoles('ROLE_USER');
+        $user->setActive(true);
+
+        $pwd=$user->getPassword();
+        $encoder=$this->container->get('security.password_encoder');
+        $pwd=$encoder->encodePassword($user, $pwd);
+        $user->setPassword($pwd);
+
+        $em->persist($user);
+        $em->flush();
+
+        $url = $this->generateUrl('login');
+        return $this->redirect($url);
+    }
+
+
 }

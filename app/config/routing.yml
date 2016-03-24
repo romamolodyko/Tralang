@@ -5,3 +5,6 @@ app:
 tralang:
     resource: "@TralangBundle/Controller"
     type:     annotation
+registration:
+    path:     /register
+    defaults: { _controller: TralangBundle:Registration:register }

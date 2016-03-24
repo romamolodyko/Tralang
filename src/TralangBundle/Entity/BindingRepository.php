@@ -1,9 +1,7 @@
 <?php
 
 namespace TralangBundle\Entity;
-
 use Doctrine\ORM\EntityRepository;
-use TralangBundle\DQL;
 
 class BindingRepository extends EntityRepository
 {
