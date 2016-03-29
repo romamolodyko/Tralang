@@ -45,56 +45,59 @@
     });*/
 
 /*--------------------------------------------------------------*/
-/*$('.sign-in-click').on('click', function () {
+$('.sign-in-click').on('click', function () {
     $('.sign-up').css("display", "none");
     $('.sign-in').css("display", "block");
     $('.check-login').on('click', function () {
-        formArray = getFormValue("form-login");
-        var email = formArray['email'];
-        var password = formArray['password'];
-        error = validate(email, password);
-        if (error) {
-            $('.warning-login').css('display', 'block');
-            $('.alert-warning strong').text(error);
-        }
-        else {
-            $.get('login',
-                {
-                    email: email,
-                    password: password
-                }
-            ).done(function(data){
-                    if(data == "false"){
-                        $('.form-control').val("");
-                        $('.warning-login').css('display', 'block');
-                        $('.warning-login strong').text("That user doesn't exist!");
-                    }
-                    else{
-                        document.location.href = document.location.href+data;
-                    }
-                });
-
-        }
-    });
-    checkInput("field-email-log");
-    checkInput("field-password-log");
-
-});*/
-//___________________________________________________________________________-'
-$('.sign-up-click').on('click', function () {
-    $('.sign-up').css("display", "block");
-    $('.check-sign-up').on('click', function () {
-        var msg   = $('#form-sign-up').serialize();
+        var msg   = $('#form-login').serialize();
+        console.log(msg);
         $.ajax({
             type: 'POST',
-            url: 'register',
+            url: 'login_check',
             data: msg,
             success: function(data) {
-                console.log(JSON.parse(data));
+                $('.login-error').children().text(data);
+                console.log(data);
+                //location.href = location.href+'home';
             },
             error:  function(xhr, str){
                 alert('Возникла ошибка: ' + xhr.responseCode);
             }
         });
     });
-})
+});
+//___________________________________________________________________________-'
+$('.sign-up-click').on('click', function () {
+    $('.sign-up').css("display", "block");
+    $('.check-sign-up').on('click', function () {
+        var msg   = $('#form-sign-up').serialize();
+        console.log(msg);
+        $.ajax({
+            type: 'POST',
+            url: 'register',
+            data: msg,
+            success: function(data) {
+                if(data === "home"){
+                    location.href = location.href+data;
+                }
+                else {
+                    error = JSON.parse(data);
+                    //location.href = location.href+data;
+                    console.log(error);
+                    e_email = error.email;
+                    e_username = error.username;
+                    e_password = error.plainPassword;
+                    e_secondPassword = error.secondPassword;
+                    t = 'children[plainPassword]';
+                    $('.user-error').children().text(e_username);
+                    $('.email-error').children().text(e_email);
+                    $('.password-first-error').children().text(e_password);
+                    $('.password-second-error').children().text(e_secondPassword);
+                }
+            },
+            error:  function(xhr, str){
+                alert('Возникла ошибка: ' + xhr.responseCode);
+            }
+        });
+    });
+});

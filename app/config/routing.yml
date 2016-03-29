@@ -8,3 +8,4 @@ tralang:
 registration:
     path:     /register
     defaults: { _controller: TralangBundle:Registration:register }
+

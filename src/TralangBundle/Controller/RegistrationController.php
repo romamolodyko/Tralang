@@ -2,11 +2,8 @@
 namespace TralangBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\Form\Extension\Validator\Constraints\Form;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormRegistry;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use TralangBundle\Entity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -31,16 +28,16 @@ class RegistrationController extends Controller
             $password = $this->get('security.password_encoder')
                 ->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($password);
-            $user->setRoles("ROLE_USER");
-            // 4) save the User!
+            //$role = new Entity\Role();
+            $role[] = 'ROLE_USER';
+            $user->setRoles($role);
             $em = $this->getDoctrine()->getManager();
             //$em->persist($user);
-            $em->flush();
-
-            // ... do any other work - like sending them an email, etc
-            // maybe set a "flash" success message for the user
-
-            //return $this->redirectToRoute('homepage');
+            //$em->flush();
+            $token = new UsernamePasswordToken($user,null,'main',$user->getRoles());
+            $this->get('security.token_storage')->setToken($token);
+            //$log = $this->forward('TralangBundle:Login:loginCheck');
+            return new Response('home');
         }
         return new Response(json_encode($errors));
         /*return $this->render(
@@ -61,7 +58,11 @@ class RegistrationController extends Controller
 
 
         foreach ($errors as $error) {
-            $collection[str_replace("data.", "", $error->getPropertyPath())] = $error->getMessage();
+            if ($error->getPropertyPath() == 'children[plainPassword]') {
+                $collection[str_replace("children[plainPassword]", "secondPassword", $error->getPropertyPath())] = $error->getMessage();
+            } else {
+                $collection[str_replace("data.", "", $error->getPropertyPath())] = $error->getMessage();
+            }
         }
         return $collection;
     }

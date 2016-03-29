@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SecurityController extends Controller
 {
     /**
-     * @Route("/login", name="security_login_form")
+     * @Route("/loginq", name="security_ldfogin_form")
      */
     public function loginAction(Request $request)
     {
@@ -33,7 +33,7 @@ class SecurityController extends Controller
     }
 
     /**
-     * @Route("/login_check", name="security_login_check")
+     * @Route("/login_check", name="securitysdf_login_check")
      */
     public function loginCheckAction()
     {

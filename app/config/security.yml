@@ -14,10 +14,6 @@ security:
                 property: username
 
     firewalls:
-        default:
-            anonymous: ~
-            http_basic: ~
-        # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
@@ -25,7 +21,16 @@ security:
         main:
             pattern:    ^/
             http_basic: ~
+            security: true
+            anonymous: true
             provider: our_db_provider
+            form_login:
+                login_path: /login
+                check_path: /login_check
+                default_target_path: homepage
+            logout: true
+
+
 
             # activate different ways to authenticate
 
@@ -37,5 +42,4 @@ security:
 
     access_control:
         # require ROLE_ADMIN for /admin*
-        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin, roles: ROLE_ADMIN }
