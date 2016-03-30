@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
-class LoginController extends Controller
+class SecurityController extends Controller
 {
     /**
      * @Route("/login", name="security_login_form")
@@ -47,10 +47,4 @@ class LoginController extends Controller
     {
         throw new \Exception('This should never be reached!');
     }
-
-
-
-
-
-
 }

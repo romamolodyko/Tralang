@@ -20,14 +20,7 @@ function checkInput(nameField){
     });
 }
 
-function getFormValue(nameForm){
-    var form = $("#"+nameForm).serializeArray();
-    a = [];
-    for(var i = 0; form.length > i; i++){
-        a[form[i].name] = form[i].value;
-    }
-    return a;
-}
+
 
 function validate(email, password) {
     var error = "";
@@ -72,7 +65,4 @@ function playWord(word){
     $('audio').attr('src', url).get(0).play();
 }
 
-function shuffle(o){
-    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-    return o;
-}
+

@@ -28,8 +28,12 @@ security:
                 login_path: /login
                 check_path: /login_check
                 default_target_path: homepage
+                use_forward: true
             logout: true
 
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
 
             # activate different ways to authenticate
@@ -43,3 +47,6 @@ security:
     access_control:
         # require ROLE_ADMIN for /admin*
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/home, roles: ROLE_USER }
+        - { path: ^/glossary, roles: ROLE_USER }
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -1,6 +1,6 @@
 <?php
 
-namespace TralangBundle\Entity;
+namespace TralangBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 
 class BindingRepository extends EntityRepository

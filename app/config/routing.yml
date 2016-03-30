@@ -8,4 +8,6 @@ tralang:
 registration:
     path:     /register
     defaults: { _controller: TralangBundle:Registration:register }
-
+admin_area:
+    resource: "@SonataAdminBundle/Resources/config/routing/sonata_admin.xml"
+    prefix: /admin

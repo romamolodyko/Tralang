@@ -4,7 +4,7 @@ namespace TralangBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="TralangBundle\Entity\BindingRepository")
+ * @ORM\Entity(repositoryClass="TralangBundle\Repository\BindingRepository")
  * @ORM\Table(name="binding")
  */
 class Binding

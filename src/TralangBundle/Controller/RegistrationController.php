@@ -4,6 +4,7 @@ namespace TralangBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use TralangBundle\Form;
 use TralangBundle\Entity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -19,7 +20,7 @@ class RegistrationController extends Controller
     {
         // 1) build the form
         $user = new Entity\User();
-        $form = $this->createForm(Entity\UserType::class, $user);
+        $form = $this->createForm(Form\UserType::class, $user);
         $form->handleRequest($request);
         // 2) handle the submit (will only happen on POST)
         $errors = $this->_getErrors($form);
@@ -29,11 +30,11 @@ class RegistrationController extends Controller
                 ->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($password);
             //$role = new Entity\Role();
-            $role[] = 'ROLE_USER';
+            $role[] = 'ROLE_ADMIN';
             $user->setRoles($role);
             $em = $this->getDoctrine()->getManager();
-            //$em->persist($user);
-            //$em->flush();
+            $em->persist($user);
+            $em->flush();
             $token = new UsernamePasswordToken($user,null,'main',$user->getRoles());
             $this->get('security.token_storage')->setToken($token);
             //$log = $this->forward('TralangBundle:Login:loginCheck');

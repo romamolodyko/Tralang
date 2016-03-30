@@ -7,7 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace TralangBundle\Entity;
+namespace TralangBundle\Repository\Entity;
 use Doctrine\ORM\EntityRepository;
 /**
  * This custom Doctrine repository is empty because so far we don't need any custom
