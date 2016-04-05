@@ -67,6 +67,13 @@ doctrine:
         auto_generate_proxy_classes: "%kernel.debug%"
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
+        mappings:
+               TralangBundle:
+                   type: annotation
+                   is_bundle: false
+                   dir: %kernel.root_dir%/../src/TralangBundle/Entity/
+                   prefix: TralangBundle\Entity
+                   alias: TralangBundle
         dql:
                     numeric_functions:
                         Rand: TralangBundle\DQL\RandFunction
