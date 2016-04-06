@@ -14,6 +14,12 @@ services:
                 - { name: sonata.admin, manager_type: orm, label: User }
       admin.words:
             class: TralangBundle\Admin\WordsAdmin
-            arguments: [~, TralangBundle\Entity\Word, ~]
+            arguments: [~, TralangBundle\Entity\Words, ~]
             tags:
                 - { name: sonata.admin, manager_type: orm, label: Words }
+
+      admin.categories:
+            class: TralangBundle\Admin\CategoriesAdmin
+            arguments: [~, TralangBundle\Entity\Category, ~]
+            tags:
+                - { name: sonata.admin, manager_type: orm, label: Categories }

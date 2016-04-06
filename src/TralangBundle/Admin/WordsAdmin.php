@@ -5,21 +5,25 @@ use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use TralangBundle\Entity\Category;
 
 class WordsAdmin extends Admin
 {
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->with('Content')
-            ->add('name', 'text')
-            ->end()
-
-            ->with('Meta data')
-            ->add('name', 'sonata_type_model', array(
-                'class' => 'TralangBundle\Entity\Word',
-                'property' => 'name',
+            ->add('enWords', 'text')
+            ->add('ruWords', 'text')
+            ->add('category', 'entity', array(
+                'class' => 'TralangBundle\Entity\Category',
+                'choice_label' => 'categories',
             ))
-            ->end();
+        ;
+    }
+
+    protected function configureListFields(ListMapper $listMapper)
+    {
+        $listMapper->add('enWords')->add('ruWords')->add('category', null, array(
+            'associated_property' => 'categories'));
     }
 }

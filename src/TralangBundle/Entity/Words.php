@@ -31,18 +31,10 @@ class Words
     protected $en_words;
 
     /**
-     * @Assert\NotBlank(message = "Word doesn't add")
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="words")
      */
-    public function setRuWord($ruWord){
-        $this->ru_words = $ruWord;
-    }
+    protected $category;
 
-    /**
-     * @Assert\NotBlank(message = "Word doesn't add")
-     */
-    public function setEnWord($enWord){
-        $this->en_words = $enWord;
-    }
 
     /**
      * Get user id
@@ -53,23 +45,6 @@ class Words
         return $this->id;
     }
 
-    /**
-     * Get user enWord
-     * @Assert\NotBlank(message = "Word doesn't exist")
-     * @return string
-     */
-    public function getEnWord(){
-        return $this->en_words;
-    }
-
-    /**
-     * Get user id
-     * @Assert\NotBlank(message = "Word doesn't exist")
-     * @return string
-     */
-    public function getRuWord(){
-        return $this->ru_words;
-    }
 
     /**
      * Set ruWords
@@ -78,12 +53,12 @@ class Words
      *
      * @return Words
      */
-   /* public function setRuWords($ruWords)
+   public function setRuWords($ruWords)
     {
         $this->ru_words = $ruWords;
 
         return $this;
-    }*/
+    }
 
     /**
      * Get ruWords
@@ -117,5 +92,27 @@ class Words
     public function getEnWords()
     {
         return $this->en_words;
+    }
+
+    /**
+     * Get category
+     *
+     * @return string
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * Set category
+     *
+     * @param string $category
+     *
+     * @return Words
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
     }
 }
