@@ -24,10 +24,6 @@ class ViewController extends Controller
      * @Route("/home", name="homepage")
      */
     public function showMainAction(){
-
-
-        return $this->render('TralangBundle:MainView:home.html.twig', array(
-
-        ));
+        return $this->render('TralangBundle:MainView:home.html.twig');
     }
 }

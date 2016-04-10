@@ -16,10 +16,11 @@
          * @Route("/glossary", name = "glossary")
          */
         public function showWordsAction(){
-            $session = new Session();
+            $user = $this->getUser()->getId();
+            $words = [];
             $em = $this->getDoctrine()->getEntityManager();
             $repository = $em->getRepository('TralangBundle:Binding');
-            $idWords = $repository->findBy(array('id_user' => $session->get('id')));
+            $idWords = $repository->findBy(array('id_user' => $user));
             if(!$idWords){
                 $err = "Add a words!";
                 return $this->render("TralangBundle:AddWords:add.html.twig", array('empty' => $err));
@@ -32,7 +33,6 @@
                 }
                 return $this->render('TralangBundle:AddWords:list-words.html.twig', array('array' => $words, 'id' => true));
             }
-
             return $this->render('TralangBundle:AddWords:add.html.twig');
         }
 
@@ -49,8 +49,8 @@
             $repository = $em->getRepository('TralangBundle:Words');
             $fword = $repository->findBy(array('en_words' => $enWord, 'ru_words' => $ruWord));
             if(!$fword){
-                $words->setEnWord($enWord);
-                $words->setRuWord($ruWord);
+                $words->setEnWords($enWord);
+                $words->setRuWords($ruWord);
                 $em->persist($words);
                 $em->flush();
                 $b = $this->binding($words->getId());

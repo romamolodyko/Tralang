@@ -29,15 +29,14 @@ class RegistrationController extends Controller
             $password = $this->get('security.password_encoder')
                 ->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($password);
-            //$role = new Entity\Role();
-            $role[] = 'ROLE_ADMIN';
+            $role[] = 'ROLE_USER';
             $user->setRoles($role);
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
             $token = new UsernamePasswordToken($user,null,'main',$user->getRoles());
             $this->get('security.token_storage')->setToken($token);
-            //$log = $this->forward('TralangBundle:Login:loginCheck');
+            $this->forward('TralangBundle:AddGroupWords:addGroup');
             return new Response('home');
         }
         return new Response(json_encode($errors));
