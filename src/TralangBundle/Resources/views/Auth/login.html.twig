@@ -1,6 +1,5 @@
-{#{{error.message|""}}#}
 {% block login %}
-    <form class="form-signin" method='post' action='{{path('security_login_check')}}'>
+    <form class="form-signin" method='post' action='{{path('admin_login_check')}}'>
         {% if error %}
             <div class='red'>{{ error.message }}</div><br>
         {% endif %}

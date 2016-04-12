@@ -4,20 +4,18 @@ namespace TralangBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
-class SecurityController extends Controller
+class LoginController extends Controller
 {
     /**
-     * @Route("/login", name="security_login_form")
+     * @Route("/admin/login")
      * @Method("GET")
      */
     public function loginAction()
     {
         $helper = $this->get('security.authentication_utils');
-        return $this->render('TralangBundle:Auth:login-user.html.twig', array(
-            'last_username' => $helper->getLastUsername(),
+        return $this->render('TralangBundle:Auth:login.html.twig', array(
             // last authentication error (if any)
             'error' => $helper->getLastAuthenticationError(),
         ));
@@ -28,7 +26,7 @@ class SecurityController extends Controller
      * But, this will never be executed. Symfony will intercept this first
      * and handle the login automatically. See form_login in app/config/security.yml
      *
-     * @Route("/login_check", name="security_login_check")
+     * @Route("/admin/login_check", name="admin_login_check")
      */
     public function loginCheckAction()
     {
@@ -40,7 +38,7 @@ class SecurityController extends Controller
      * But, this will never be executed. Symfony will intercept this first
      * and handle the logout automatically. See logout in app/config/security.yml
      *
-     * @Route("/logout", name="security_logout")
+     * @Route("/admin/logout", name="admin_logout")
      */
     public function logoutAction()
     {

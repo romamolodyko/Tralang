@@ -24,8 +24,7 @@
          * @Route("/training/getWords", name = "getWords")
          */
         public function getGroupWords(){
-            $session = new Session();
-            $id = $session->get('id');
+            $id = $this->getUser()->getId();
             $w = [];
             $w2 = [];
             $w3 = [];
@@ -37,15 +36,15 @@
             $arr = $repository->getRandomEntities($count, $id);
             foreach($arr as $p){
                 $word = $em->getRepository('TralangBundle:Words')->findBy(array('id' => $p['id_word']));
-                $w3['text'] = $w['words'][$p['id_word']]['text'] = $word[0]->getEnWord();
-                $w3['textTranslate'] = $w['words'][$p['id_word']]['textTranslate'] = $word[0]->getRuWord();
+                $w3['text'] = $w['words'][$p['id_word']]['text'] = $word[0]->getEnWords();
+                $w3['textTranslate'] = $w['words'][$p['id_word']]['textTranslate'] = $word[0]->getRuWords();
                 $w['word_seq'][$c] = $p['id_word'];
                 $c++;
                 $arr2 = $repository->getRandomOtherEntities($count=4, $id, $p['id_word']);
                 foreach($arr2 as $p2){
                     $word2 = $em->getRepository('TralangBundle:Words')->findBy(array('id' => $p2['id_word']));
-                    $w2[$p2['id_word']]['text'] = $word2[0]->getEnWord();
-                    $w2[$p2['id_word']]['textTranslate'] = $word2[0]->getRuWord();
+                    $w2[$p2['id_word']]['text'] = $word2[0]->getEnWords();
+                    $w2[$p2['id_word']]['textTranslate'] = $word2[0]->getRuWords();
                     $w['words'][$p['id_word']]['mix_words'] = $w2;
                     $w['words'][$p['id_word']]['word_seq'][$c2] = $p2['id_word'];
                     $c2++;

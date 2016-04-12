@@ -18,7 +18,7 @@
         public function showWordsAction(){
             $user = $this->getUser()->getId();
             $words = [];
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $repository = $em->getRepository('TralangBundle:Binding');
             $idWords = $repository->findBy(array('id_user' => $user));
             if(!$idWords){
@@ -45,7 +45,7 @@
             $words = new Words();
             $ruWord = $request->get("russiaWord");
             $enWord = $request->get("englishWord");
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $repository = $em->getRepository('TralangBundle:Words');
             $fword = $repository->findBy(array('en_words' => $enWord, 'ru_words' => $ruWord));
             if(!$fword){

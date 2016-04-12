@@ -31,7 +31,7 @@ class Words
     protected $en_words;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="words")
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="")
      */
     protected $category;
 
